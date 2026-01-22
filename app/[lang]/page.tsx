@@ -13,9 +13,15 @@ export async function generateMetadata(props: { params: Promise<{ lang: Locale }
   const params = await props.params;
   const dict = await getDictionary(params.lang);
 
+  const titles = {
+    en: 'Official Mongol Trail | Premier Adventure & Hiking Tours in Mongolia',
+    mn: 'Албан ёсны Mongol Trail | Монголын шилдэг явган аялал, адал явдалт аялал',
+    ko: '공식 Mongol Trail | 몽골 최고의 하이킹 및 어드벤처 투어'
+  };
+
   const baseUrl = 'https://www.mongoltrail.com';
   return {
-    title: dict.nav.home + ' | Mongol Trail',
+    title: titles[params.lang] || titles.en,
     description: dict.featured.desc,
     alternates: {
       canonical: `${baseUrl}/${params.lang}`,

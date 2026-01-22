@@ -28,6 +28,21 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     ],
     authors: [{ name: 'Mongol Trail Team' }],
     creator: 'Mongol Trail',
+    publisher: 'Mongol Trail',
+    formatDetection: {
+      email: false,
+      address: true,
+      telephone: true,
+    },
+    metadataBase: new URL(baseUrl),
+    verification: {
+      google: 'YOUR_GOOGLE_VERIFICATION_CODE', // Replace with your actual code from Google Search Console
+      // yandex: 'yandex',
+      // yahoo: 'yahoo',
+      // other: {
+      //   me: ['my-email', 'my-link'],
+      // },
+    },
     openGraph: {
       type: 'website',
       locale: lang === 'mn' ? 'mn_MN' : lang === 'ko' ? 'ko_KR' : 'en_US',
@@ -35,6 +50,14 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       title: 'Mongol Trail | Your Gateway to Adventure',
       description: 'Experience the ultimate adventure with Mongol Trail. Premier tours across Mongolia and the world.',
       siteName: 'Mongol Trail',
+      images: [
+        {
+          url: '/try.png',
+          width: 1200,
+          height: 630,
+          alt: 'Mongol Trail Adventure',
+        },
+      ],
     },
     alternates: {
       canonical: `${baseUrl}/${lang}`,
@@ -52,6 +75,12 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       title: 'Mongol Trail | Your Gateway to Adventure',
       description: 'Experience the ultimate adventure with Mongol Trail.',
       creator: '@mongoltrail',
+      images: ['/try.png'],
+    },
+    appleWebApp: {
+      capable: true,
+      statusBarStyle: 'default',
+      title: 'Mongol Trail',
     },
     robots: {
       index: true,
