@@ -21,6 +21,7 @@ export default async function DashboardPage() {
       bookings={bookings as any} 
       userName={user.firstName || "Traveler"} 
       userImage={user.imageUrl}
+      isAdmin={user.publicMetadata?.role === "admin"}
     />
   );
 }

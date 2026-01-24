@@ -221,6 +221,81 @@ const tripsData = [
       ko: "산길을 달리는 진정한 모터사이클 모험."
     },
     itinerary: [{ day: 1, title: { mn: "Ханой", en: "Hanoi", ko: "하노이" }, desc: { mn: "...", en: "...", ko: "..." } }]
+  },
+  // ─── NEW: WINTER SPECIAL ───
+  {
+    type: "standard",
+    region: "mongolia",
+    title: { mn: "Мөнгөн Өвөл - Хөвсгөл", en: "Silver Winter - Khuvsgul", ko: "은빛 겨울 - 홉스굴" },
+    category: "nature",
+    location: { mn: "Хөвсгөл нуур, Монгол", en: "Lake Khuvsgul, Mongolia", ko: "몽골 홉스굴 호수" },
+    duration: { mn: "3 Өдөр", en: "3 Days", ko: "3일" },
+    rating: 5.0,
+    reviews: 45,
+    price: { mn: 1000000, en: 280, ko: 380000 }, // Legacy field
+    priceAdult: { mn: 1000000, en: 280, ko: 380000 },
+    priceChild: { mn: 800000, en: 220, ko: 300000 },
+    salePrice: { mn: 800000, en: 224, ko: 304000 }, // 20% OFF
+    discountPercentage: 20,
+    image: "/glacier.png", // Reusing existing image asset
+    tags: ["Winter", "Frozen Lake", "Adventure"],
+    featured: true,
+    description: {
+      mn: "Хөвсгөл нуурын цэнгэг агаар, мөсөн бүрхүүл дээгүүрх гайхамшигт аялал. Өвлийн байгалийн дахин давтагдашгүй үзэсгэлэнг өөрийн биеэр мэдрээрэй.",
+      en: "A wonderful journey across the fresh air and ice cover of Lake Khuvsgul. Experience the unique beauty of winter nature.",
+      ko: "홉스굴 호수의 신선한 공기와 얼음 덮인 풍경을 가로지르는 멋진 여행. 겨울 자연의 독특한 아름다움을 경험해 보세요."
+    },
+    highlights: [
+      { mn: "Мөсөн дээгүүрх нохойтой чарганы аялал", en: "Dog sledding on ice", ko: "얼음 위 개썰매 여행" },
+      { mn: "Хүслийн хаданд зочлох", en: "Visit to the Wish Rock", ko: "소원의 바위 방문" },
+      { mn: "Мөсөн дээрх гар бөмбөгийн тэмцээн", en: "Ice volleyball match", ko: "얼음 위 배구 경기" }
+    ],
+    includedServices: [
+      { mn: "Юрт бааз / Зочид буудлын байрлал", en: "Ger camp / Hotel accommodation", ko: "게르 캠프 / 호텔 숙박" },
+      { mn: "Өдрийн 3 хоол (Тусгай цэс)", en: "3 meals per day (Special menu)", ko: "1일 3식 (특식)" },
+      { mn: "Тохилог тээврийн хэрэгсэл", en: "Comfortable transportation", ko: "편안한 교통수단" },
+      { mn: "Мэргэжлийн хөтөч", en: "Professional guide", ko: "전문 가이드" }
+    ],
+    excludedServices: [
+      { mn: "Хувийн хэрэглээний зардал", en: "Personal expenses", ko: "개인 비용" },
+      { mn: "Нэмэлт уух зүйлс", en: "Extra drinks", ko: "추가 음료" },
+      { mn: "Гэнэтийн ослын даатгал", en: "Travel insurance", ko: "여행자 보험" }
+    ],
+    availableDates: [
+      { date: "2026.02.15", status: "open", isFull: false },
+      { date: "2026.03.08", status: "open", isFull: false },
+      { date: "2026.03.15", status: "open", isFull: false }
+    ],
+    allowCustomDate: true,
+    itinerary: [
+      { 
+        day: 1, 
+        title: { mn: "Улаанбаатар - Хөвсгөл", en: "Ulaanbaatar - Khuvsgul", ko: "울란바토르 - 홉스굴" }, 
+        desc: { 
+          mn: "Улаанбаатар хотоос аялал эхэлж, Хөвсгөл нуурын эрэгт байрлах тохилог бааздаа ирж тухлах. Орой нь орон нутгийн онцлогтой зоог барина.", 
+          en: "Start the journey from UB, settle in a cozy camp on the shores of Lake Khuvsgul. Local dinner in the evening.",
+          ko: "울란바토르에서 출발하여 홉스굴 호숫가의 아늑한 캠프에 정착합니다. 저녁에는 지역 특식을 즐깁니다."
+        } 
+      },
+      { 
+        day: 2, 
+        title: { mn: "Мөсөн дээгүүрх адал явдал", en: "Adventure on Ice", ko: "얼음 위의 모험" }, 
+        desc: { 
+          mn: "Мөсөн дээгүүрх аялал. Нохойтой чаргаар гулгах, мөсөн дээрх гар бөмбөгийн тэмцээнд оролцож, Хүслийн хаданд зочлон хүслээ даатгах.",
+          en: "Ice trip. Dog sledding, participating in an ice volleyball match, and visiting the Wish Rock.",
+          ko: "얼음 여행. 개썰매 타기, 얼음 배구 경기 참여, 소원의 바위 방문."
+        } 
+      },
+      { 
+        day: 3, 
+        title: { mn: "Дурсгал худалдан авах & Буцах", en: "Souvenirs & Return", ko: "기념품 및 귀환" }, 
+        desc: { 
+          mn: "Орон нутгийн гар урлалын дэлгүүрээр зочлох. Хөвсгөлийн бэлэг дурсгал худалдан авч, аяллын хаалтын зоог барин Улаанбаатар хот руу буцах.",
+          en: "Visit local handicraft shops. Buy souvenirs, have a farewell lunch, and return to UB.",
+          ko: "지역 공예품점 방문. 기념품 구매, 환송 오찬 후 울란바토르로 귀환."
+        } 
+      }
+    ]
   }
 ];
 

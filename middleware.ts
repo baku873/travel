@@ -3,6 +3,7 @@ import type { NextRequest } from 'next/server';
 import { i18n } from './i18n-config';
 import { match as matchLocale } from '@formatjs/intl-localematcher';
 import Negotiator from 'negotiator';
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
 function getLocale(request: NextRequest): string | undefined {
     // Negotiator expects plain object so we need to transform headers
@@ -21,7 +22,7 @@ function getLocale(request: NextRequest): string | undefined {
     return locale;
 }
 
-export function middleware(request: NextRequest) {
+export default clerkMiddleware(async (auth, request) => {
     const { pathname } = request.nextUrl;
 
     // 1. Skip if the path already has a locale or is a public file
@@ -33,9 +34,7 @@ export function middleware(request: NextRequest) {
         // 2. Optimized locale detection
         const locale = getLocale(request);
 
-        // 3. Use 301 for permanent redirect if it's the root to help SEO, 
-        // but 307 is generally safer for dynamic locale matching.
-        // We'll use 307 here to avoid caching the wrong locale.
+        // 3. Redirect to the localized path
         return NextResponse.redirect(
             new URL(
                 `/${locale}${pathname === '/' ? '' : pathname}`,
@@ -43,9 +42,13 @@ export function middleware(request: NextRequest) {
             )
         );
     }
-}
+});
 
 export const config = {
-    // Matcher ignoring `/_next/`, `/api/`, and `/static/`
-    matcher: ['/((?!api|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|.*\\..*).*)'],
+    matcher: [
+        // Skip Next.js internals and all static files, unless found in search params
+        '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+        // Always run for API routes
+        '/(api|trpc)(.*)',
+    ],
 };

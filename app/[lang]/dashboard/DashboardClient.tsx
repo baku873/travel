@@ -12,6 +12,7 @@ import {
   FaCalendarAlt,
   FaUser,
   FaMapMarkerAlt,
+  FaUserShield,
 } from "react-icons/fa";
 import { useClerk } from "@clerk/nextjs";
 import { useLanguage } from "@/app/context/LanguageContext";
@@ -21,12 +22,14 @@ interface DashboardProps {
   bookings: Booking[];
   userName: string;
   userImage: string;
+  isAdmin?: boolean;
 }
 
 export default function DashboardClient({ 
   bookings = [], 
   userName, 
-  userImage 
+  userImage,
+  isAdmin = false,
 }: DashboardProps) {
   const { language } = useLanguage();
   const { signOut } = useClerk();
@@ -51,7 +54,8 @@ export default function DashboardClient({
       travelers: "Аялагч",
       total: "Нийт дүн",
       logout: "Гарах",
-      viewBtn: "Дэлгэрэнгүй"
+      viewBtn: "Дэлгэрэнгүй",
+      adminPanel: "Админ хэсэг"
     },
     en: {
       welcome: `Welcome back, ${userName}!`,
@@ -63,7 +67,8 @@ export default function DashboardClient({
       travelers: "Travelers",
       total: "Total",
       logout: "Sign Out",
-      viewBtn: "View Details"
+      viewBtn: "View Details",
+      adminPanel: "Admin Panel"
     },
     ko: {
       welcome: `환영합니다, ${userName}님!`,
@@ -75,7 +80,8 @@ export default function DashboardClient({
       travelers: "여행자",
       total: "총 금액",
       logout: "로그아웃",
-      viewBtn: "상세 보기"
+      viewBtn: "상세 보기",
+      adminPanel: "관리자 패널"
     }
   };
 
@@ -97,12 +103,21 @@ export default function DashboardClient({
               <p className="text-slate-500">{text.subtitle}</p>
             </div>
           </div>
-          <button 
-            onClick={() => signOut({ redirectUrl: '/' })}
-            className="flex items-center gap-2 px-6 py-3 rounded-xl bg-red-50 text-red-600 font-bold hover:bg-red-100 transition-colors"
-          >
-            <FaSignOutAlt /> {text.logout}
-          </button>
+          <div className="flex items-center gap-3">
+            {isAdmin && (
+              <Link href="/admin">
+                <button className="flex items-center gap-2 px-6 py-3 rounded-xl bg-sky-50 text-sky-600 font-bold hover:bg-sky-100 transition-colors">
+                  <FaUserShield /> {text.adminPanel}
+                </button>
+              </Link>
+            )}
+            <button 
+              onClick={() => signOut({ redirectUrl: '/' })}
+              className="flex items-center gap-2 px-6 py-3 rounded-xl bg-red-50 text-red-600 font-bold hover:bg-red-100 transition-colors"
+            >
+              <FaSignOutAlt /> {text.logout}
+            </button>
+          </div>
         </div>
 
         {/* Tabs */}

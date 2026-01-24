@@ -7,10 +7,20 @@ FaMapSigns, FaCalendarAlt, FaUserPlus, FaSearch, FaUserCircle, FaMinusCircle
 } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 // --- Types ---
+interface LocalizedString {
+  mn: string;
+  en: string;
+  ko: string;
+}
+interface LocalizedPrice {
+  mn: number;
+  en: number;
+  ko: number;
+}
 interface ItineraryItem {
 day: number;
-title: { mn: string; en: string; ko: string };
-desc: { mn: string; en: string; ko: string };
+title: LocalizedString;
+desc: LocalizedString;
 }
 interface TripDate {
 id: string;
@@ -19,14 +29,23 @@ endDate: string;
 maxSeats: number;
 bookedSeats: number;
 }
+interface FlexibleDate {
+  date: string;
+  status: string;
+  isFull?: boolean;
+}
 interface Trip {
 _id: string;
-title: { mn: string; en: string; ko: string };
-location: { mn: string; en: string; ko: string };
-description: { mn: string; en: string; ko: string };
-duration: { mn: string; en: string; ko: string };
-ageGroup: { mn: string; en: string; ko: string };
-price: { mn: number; en: number; ko: number };
+title: LocalizedString;
+location: LocalizedString;
+description: LocalizedString;
+duration: LocalizedString;
+ageGroup: LocalizedString;
+price: LocalizedPrice;
+priceAdult?: LocalizedPrice;
+priceChild?: LocalizedPrice;
+salePrice?: LocalizedPrice;
+discountPercentage?: number;
 rating: number;
 featured: boolean;
 type: string;
@@ -35,7 +54,12 @@ category: string;
 image: string;
 perks: string[];
 tags: string[];
+highlights?: LocalizedString[];
+includedServices?: LocalizedString[];
+excludedServices?: LocalizedString[];
 itinerary: ItineraryItem[];
+availableDates?: FlexibleDate[];
+allowCustomDate?: boolean;
 dates: TripDate[];
 }
 interface ClerkUser {
@@ -71,6 +95,10 @@ const BLANK_FORM_DATA: Partial<Trip> = {
     duration: { mn: "", en: "", ko: "" },
     ageGroup: { mn: "Бүх нас", en: "All Ages", ko: "전연령" },
     price: { mn: 0, en: 0, ko: 0 },
+    priceAdult: { mn: 0, en: 0, ko: 0 },
+    priceChild: { mn: 0, en: 0, ko: 0 },
+    salePrice: { mn: 0, en: 0, ko: 0 },
+    discountPercentage: 0,
     rating: 5.0,
     type: "standard",
     region: "europe",
@@ -78,10 +106,46 @@ const BLANK_FORM_DATA: Partial<Trip> = {
     featured: false,
     perks: [],
     tags: [],
+    highlights: [],
+    includedServices: [],
+    excludedServices: [],
     image: "",
     itinerary: [],
+    availableDates: [],
+    allowCustomDate: true,
     dates: [],
 };
+// Helper for Trilingual Arrays (Highlights, etc)
+const TrilingualArrayInput: React.FC<{
+  label: string;
+  items: LocalizedString[];
+  onChange: (index: number, lang: Language, value: string) => void;
+  onAdd: () => void;
+  onRemove: (index: number) => void;
+}> = ({ label, items, onChange, onAdd, onRemove }) => (
+  <div className="space-y-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
+    <div className="flex justify-between items-center">
+      <label className="text-xs font-bold text-slate-500 uppercase">{label}</label>
+      <button type="button" onClick={onAdd} className="text-blue-600 hover:text-blue-700 text-xs font-bold flex items-center gap-1">
+        <FaPlus size={10} /> Add Item
+      </button>
+    </div>
+    <div className="space-y-2">
+      {items.map((item, idx) => (
+        <div key={idx} className="flex gap-2 items-start">
+          <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-2">
+            <input value={item.mn} onChange={e => onChange(idx, 'mn', e.target.value)} placeholder="MN" className="w-full border p-1.5 rounded text-xs" />
+            <input value={item.en} onChange={e => onChange(idx, 'en', e.target.value)} placeholder="EN" className="w-full border p-1.5 rounded text-xs" />
+            <input value={item.ko} onChange={e => onChange(idx, 'ko', e.target.value)} placeholder="KO" className="w-full border p-1.5 rounded text-xs" />
+          </div>
+          <button type="button" onClick={() => onRemove(idx)} className="mt-1.5 text-red-400 hover:text-red-600"><FaTrash size={12} /></button>
+        </div>
+      ))}
+      {items.length === 0 && <p className="text-xs text-slate-400 italic">No items added.</p>}
+    </div>
+  </div>
+);
+
 export default function TripsManager({ initialTrips }: { initialTrips: Trip[] }) {
 const router = useRouter();
 const fileInputRef = useRef<HTMLInputElement>(null);
@@ -117,15 +181,50 @@ setIsModalOpen(true);
 };
 const handleOpenEdit = (trip: Trip) => {
 setEditingTrip(trip);
-setFormData({ ...BLANK_FORM_DATA, ...trip, itinerary: trip.itinerary || [], dates: trip.dates || [] });
+setFormData({ 
+  ...BLANK_FORM_DATA, 
+  ...trip, 
+  itinerary: trip.itinerary || [], 
+  dates: trip.dates || [],
+  highlights: trip.highlights || [],
+  includedServices: trip.includedServices || [],
+  excludedServices: trip.excludedServices || [],
+  availableDates: trip.availableDates || []
+});
 setIsModalOpen(true);
 };
 const handleCloseModal = () => setIsModalOpen(false);
 const handleTrilingualChange = (field: keyof Trip, lang: Language, value: string) => {
 setFormData(prev => ({ ...prev, [field]: { ...(prev[field] as any), [lang]: value } }));
 };
-const handlePriceChange = (lang: Language, value: string) => {
-setFormData(prev => ({ ...prev, price: { ...(prev.price as any), [lang]: Number(value) || 0 } }));
+const handlePriceChange = (field: 'price' | 'priceAdult' | 'priceChild' | 'salePrice', lang: Language, value: string) => {
+setFormData(prev => ({ ...prev, [field]: { ...(prev[field] as any), [lang]: Number(value) || 0 } }));
+};
+const handleLocalizedArrayChange = (field: 'highlights' | 'includedServices' | 'excludedServices', index: number, lang: Language, value: string) => {
+  setFormData(prev => {
+    const newArray = [...(prev[field] || [])];
+    newArray[index] = { ...newArray[index], [lang]: value };
+    return { ...prev, [field]: newArray };
+  });
+};
+const addLocalizedArrayItem = (field: 'highlights' | 'includedServices' | 'excludedServices') => {
+  setFormData(prev => ({ ...prev, [field]: [...(prev[field] || []), { mn: "", en: "", ko: "" }] }));
+};
+const removeLocalizedArrayItem = (field: 'highlights' | 'includedServices' | 'excludedServices', index: number) => {
+  setFormData(prev => ({ ...prev, [field]: (prev[field] || []).filter((_, i) => i !== index) }));
+};
+const addFlexibleDate = () => {
+  setFormData(prev => ({ ...prev, availableDates: [...(prev.availableDates || []), { date: "", status: "open", isFull: false }] }));
+};
+const updateFlexibleDate = (index: number, field: keyof FlexibleDate, value: any) => {
+  setFormData(prev => {
+    const newDates = [...(prev.availableDates || [])];
+    newDates[index] = { ...newDates[index], [field]: value };
+    return { ...prev, availableDates: newDates };
+  });
+};
+const removeFlexibleDate = (index: number) => {
+  setFormData(prev => ({ ...prev, availableDates: (prev.availableDates || []).filter((_, i) => i !== index) }));
 };
 const handleArrayInput = (field: 'perks' | 'tags', value: string) => {
 setFormData(prev => ({ ...prev, [field]: value.split(',').map(item => item.trim()) }));
@@ -361,25 +460,106 @@ return (
 <TrilingualInput label="Description" field="description" value={formData.description || {mn:'',en:'',ko:''}} onChange={handleTrilingualChange} isTextarea={true} />
 <TrilingualInput label="Duration" field="duration" value={formData.duration || {mn:'',en:'',ko:''}} onChange={handleTrilingualChange} />
 <TrilingualInput label="Age Group" field="ageGroup" value={formData.ageGroup || {mn:'',en:'',ko:''}} onChange={handleTrilingualChange} />
-<div className="grid grid-cols-3 gap-2">
-<input type="number" value={formData.price?.mn || ''} onChange={(e) => handlePriceChange('mn', e.target.value)} placeholder="MNT" className="w-full border p-2 rounded" />
-<input type="number" value={formData.price?.en || ''} onChange={(e) => handlePriceChange('en', e.target.value)} placeholder="USD" className="w-full border p-2 rounded" />
-<input type="number" value={formData.price?.ko || ''} onChange={(e) => handlePriceChange('ko', e.target.value)} placeholder="KRW" className="w-full border p-2 rounded" />
 </div>
-<div>
-<label className="block text-xs font-bold text-slate-500 mb-1">Perks (comma separated)</label>
-<input className="w-full border p-2 rounded text-sm" value={formData.perks?.join(', ') || ''} onChange={e => handleArrayInput('perks', e.target.value)} />
+
+<div className="space-y-4 border-t pt-6">
+  <h3 className="text-lg font-bold text-slate-800">Pricing Details</h3>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="space-y-3">
+      <label className="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wider">Base Price (Legacy)</label>
+      <div className="grid grid-cols-3 gap-2">
+        <input type="number" value={formData.price?.mn || ''} onChange={(e) => handlePriceChange('price', 'mn', e.target.value)} placeholder="MNT" className="w-full border p-2 rounded text-sm" />
+        <input type="number" value={formData.price?.en || ''} onChange={(e) => handlePriceChange('price', 'en', e.target.value)} placeholder="USD" className="w-full border p-2 rounded text-sm" />
+        <input type="number" value={formData.price?.ko || ''} onChange={(e) => handlePriceChange('price', 'ko', e.target.value)} placeholder="KRW" className="w-full border p-2 rounded text-sm" />
+      </div>
+    </div>
+    <div className="space-y-3">
+      <label className="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wider">Adult Price</label>
+      <div className="grid grid-cols-3 gap-2">
+        <input type="number" value={formData.priceAdult?.mn || ''} onChange={(e) => handlePriceChange('priceAdult', 'mn', e.target.value)} placeholder="MNT" className="w-full border p-2 rounded text-sm" />
+        <input type="number" value={formData.priceAdult?.en || ''} onChange={(e) => handlePriceChange('priceAdult', 'en', e.target.value)} placeholder="USD" className="w-full border p-2 rounded text-sm" />
+        <input type="number" value={formData.priceAdult?.ko || ''} onChange={(e) => handlePriceChange('priceAdult', 'ko', e.target.value)} placeholder="KRW" className="w-full border p-2 rounded text-sm" />
+      </div>
+    </div>
+    <div className="space-y-3">
+      <label className="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wider">Child Price</label>
+      <div className="grid grid-cols-3 gap-2">
+        <input type="number" value={formData.priceChild?.mn || ''} onChange={(e) => handlePriceChange('priceChild', 'mn', e.target.value)} placeholder="MNT" className="w-full border p-2 rounded text-sm" />
+        <input type="number" value={formData.priceChild?.en || ''} onChange={(e) => handlePriceChange('priceChild', 'en', e.target.value)} placeholder="USD" className="w-full border p-2 rounded text-sm" />
+        <input type="number" value={formData.priceChild?.ko || ''} onChange={(e) => handlePriceChange('priceChild', 'ko', e.target.value)} placeholder="KRW" className="w-full border p-2 rounded text-sm" />
+      </div>
+    </div>
+    <div className="space-y-3">
+      <label className="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wider">Sale Price (Optional)</label>
+      <div className="grid grid-cols-3 gap-2">
+        <input type="number" value={formData.salePrice?.mn || ''} onChange={(e) => handlePriceChange('salePrice', 'mn', e.target.value)} placeholder="MNT" className="w-full border p-2 rounded text-sm" />
+        <input type="number" value={formData.salePrice?.en || ''} onChange={(e) => handlePriceChange('salePrice', 'en', e.target.value)} placeholder="USD" className="w-full border p-2 rounded text-sm" />
+        <input type="number" value={formData.salePrice?.ko || ''} onChange={(e) => handlePriceChange('salePrice', 'ko', e.target.value)} placeholder="KRW" className="w-full border p-2 rounded text-sm" />
+      </div>
+    </div>
+    <div className="col-span-2">
+      <label className="text-xs font-bold text-slate-500 uppercase">Discount Percentage (%)</label>
+      <input type="number" className="w-full border p-2 rounded text-sm mt-1" value={formData.discountPercentage || ''} onChange={e => setFormData({...formData, discountPercentage: Number(e.target.value)})} placeholder="e.g. 20" />
+    </div>
+  </div>
 </div>
-<div>
-<label className="block text-xs font-bold text-slate-500 mb-1">Tags (comma separated)</label>
-<input className="w-full border p-2 rounded text-sm" value={formData.tags?.join(', ') || ''} onChange={e => handleArrayInput('tags', e.target.value)} />
+
+<div className="space-y-6 border-t pt-6">
+  <h3 className="text-lg font-bold text-slate-800">Highlights & Services</h3>
+  <TrilingualArrayInput label="Trip Highlights" items={formData.highlights || []} onChange={(i,l,v) => handleLocalizedArrayChange('highlights', i, l, v)} onAdd={() => addLocalizedArrayItem('highlights')} onRemove={(i) => removeLocalizedArrayItem('highlights', i)} />
+  <TrilingualArrayInput label="What's Included" items={formData.includedServices || []} onChange={(i,l,v) => handleLocalizedArrayChange('includedServices', i, l, v)} onAdd={() => addLocalizedArrayItem('includedServices')} onRemove={(i) => removeLocalizedArrayItem('includedServices', i)} />
+  <TrilingualArrayInput label="What's Not Included" items={formData.excludedServices || []} onChange={(i,l,v) => handleLocalizedArrayChange('excludedServices', i, l, v)} onAdd={() => addLocalizedArrayItem('excludedServices')} onRemove={(i) => removeLocalizedArrayItem('excludedServices', i)} />
 </div>
+
+<div className="space-y-4 border-t pt-6">
+  <div className="flex items-center justify-between">
+    <label className="text-sm font-bold text-slate-700">Allow Custom Date Request</label>
+    <button type="button" onClick={() => setFormData({...formData, allowCustomDate: !formData.allowCustomDate})} className={`w-12 h-6 rounded-full transition-colors relative ${formData.allowCustomDate ? 'bg-blue-600' : 'bg-slate-300'}`}>
+      <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${formData.allowCustomDate ? 'left-7' : 'left-1'}`} />
+    </button>
+  </div>
+  
+  <div>
+    <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Perks (comma separated)</label>
+    <input className="w-full border p-2 rounded text-sm" value={formData.perks?.join(', ') || ''} onChange={e => handleArrayInput('perks', e.target.value)} />
+  </div>
+  <div>
+    <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Tags (comma separated)</label>
+    <input className="w-full border p-2 rounded text-sm" value={formData.tags?.join(', ') || ''} onChange={e => handleArrayInput('tags', e.target.value)} />
+  </div>
 </div>
-                {/* 3. DATE GROUPS SECTION (UPDATED) */}
+
+<div className="border-t pt-6 bg-purple-50 p-4 rounded-lg">
+  <div className="flex justify-between items-center mb-4">
+    <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+      <FaCalendarAlt className="text-purple-600" /> Flexible / Available Dates
+    </h3>
+    <button type="button" onClick={addFlexibleDate} className="flex items-center gap-2 text-sm bg-purple-600 text-white font-bold px-3 py-1.5 rounded-lg hover:bg-purple-700 shadow-sm">
+      <FaPlus /> Add Date
+    </button>
+  </div>
+  <div className="grid grid-cols-1 gap-3">
+    {formData.availableDates?.map((d, idx) => (
+      <div key={idx} className="flex flex-wrap items-center gap-3 bg-white p-3 rounded border border-purple-200 shadow-sm">
+        <input type="text" value={d.date} onChange={e => updateFlexibleDate(idx, 'date', e.target.value)} placeholder="e.g. 2026.02.15" className="flex-1 border p-1.5 rounded text-sm" />
+        <select value={d.status} onChange={e => updateFlexibleDate(idx, 'status', e.target.value)} className="border p-1.5 rounded text-sm">
+          <option value="open">Open</option>
+          <option value="closed">Closed</option>
+        </select>
+        <label className="flex items-center gap-2 text-xs font-bold text-slate-600">
+          <input type="checkbox" checked={d.isFull} onChange={e => updateFlexibleDate(idx, 'isFull', e.target.checked)} /> Full
+        </label>
+        <button type="button" onClick={() => removeFlexibleDate(idx)} className="text-red-400 hover:text-red-600"><FaTrash size={14} /></button>
+      </div>
+    ))}
+  </div>
+</div>
+
+                {/* 3. DATE GROUPS SECTION (Legacy) */}
 <div className="border-t pt-6 bg-blue-50 p-4 rounded-lg">
 <div className="flex justify-between items-center mb-4">
 <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
-<FaCalendarAlt className="text-blue-600" /> Departure Groups
+<FaCalendarAlt className="text-blue-600" /> Fixed Departure Groups
 </h3>
 <button type="button" onClick={addDateGroup} className="flex items-center gap-2 text-sm bg-blue-600 text-white font-bold px-3 py-1.5 rounded-lg hover:bg-blue-700 shadow-sm">
 <FaPlus /> Add Date
