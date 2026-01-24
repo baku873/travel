@@ -117,28 +117,31 @@ const TripCard = ({ trip, index, language }: { trip: Trip, index: number, langua
   }
 
   // ────────────────── PRICE CALCULATION FIX ──────────────────
-  // Helper to safely get price number regardless of DB format (Old number vs New Object)
-  const getPriceValue = () => {
-    // Case 1: Price is just a number (Old DB data)
-    if (typeof trip.price === 'number') {
-      return trip.price;
-    }
-    // Case 2: Price is an object (New DB data)
-    if (typeof trip.price === 'object' && trip.price !== null) {
+  // Helper to safely get price number
+  const getLocalizedPrice = (priceObj: any) => {
+    if (typeof priceObj === 'number') return priceObj;
+    if (typeof priceObj === 'object' && priceObj !== null) {
       // @ts-ignore - Handle dynamic key access safely
-      return trip.price[language] || trip.price.mn || 0;
+      return priceObj[language] || priceObj.mn || 0;
     }
-    return 0; // Fallback
+    return 0;
   };
 
-  const priceValue = getPriceValue();
+  const adultPrice = getLocalizedPrice(trip.priceAdult) || getLocalizedPrice(trip.price);
+  const salePrice = getLocalizedPrice(trip.salePrice);
+  const hasDiscount = salePrice > 0 && salePrice < adultPrice;
+  const finalPrice = hasDiscount ? salePrice : adultPrice;
+  const discountPercentage = hasDiscount ? Math.round(((adultPrice - salePrice) / adultPrice) * 100) : 0;
 
   // Format based on currency
   const formattedPrice =
-    language === 'en' ? `$${priceValue.toLocaleString()}` :
-      language === 'ko' ? `₩${priceValue.toLocaleString()}` :
-        `${priceValue.toLocaleString()}₮`;
+    language === 'en' ? `$${finalPrice.toLocaleString()}` :
+      language === 'ko' ? `₩${finalPrice.toLocaleString()}` :
+        `${finalPrice.toLocaleString()}₮`;
   // ──────────────────────────────────────────────────────────
+
+  // Fallback image logic
+  const imageSrc = trip.image && trip.image.trim() !== "" ? trip.image : "/try.png";
 
   return (
     <motion.div
@@ -168,14 +171,19 @@ const TripCard = ({ trip, index, language }: { trip: Trip, index: number, langua
           </button>
 
           {/* Price Badge */}
-          <div className="absolute bottom-4 right-4 z-20">
+          <div className="absolute bottom-4 right-4 z-20 flex flex-col items-end">
+            {hasDiscount && (
+               <span className="bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded-lg mb-1 shadow-sm animate-pulse">
+                  {discountPercentage}% OFF
+               </span>
+            )}
             <div className="bg-white text-slate-900 text-sm font-bold px-4 py-2 rounded-xl shadow-lg flex items-center gap-1">
               {formattedPrice}
             </div>
           </div>
 
           <Image
-            src={trip.image}
+            src={imageSrc}
             alt={trip.title[language] || "Trip Image"}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

@@ -51,6 +51,9 @@ interface Trip {
   perks?: string[];
   itinerary?: ItineraryItem[];
   price: LocalizedPrice | number; 
+  priceAdult?: LocalizedPrice; // New: Adult Price
+  priceChild?: LocalizedPrice; // New: Child Price
+  salePrice?: LocalizedPrice;  // New: Discounted Price
   oldPrice?: LocalizedPrice | number;
   seatsLeft?: number;
 }
@@ -87,7 +90,7 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
   }, [isSignedIn, user]);
 
   // Helper to safely get numeric price
-  const getPriceValue = (priceObj: any) => {
+  const getLocalizedPrice = (priceObj: any) => {
     if (typeof priceObj === 'number') return priceObj;
     if (typeof priceObj === 'object' && priceObj !== null) {
       // @ts-ignore
@@ -96,8 +99,17 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
     return 0;
   };
 
-  const priceValue = getPriceValue(trip.price);
-  const oldPriceValue = trip.oldPrice ? getPriceValue(trip.oldPrice) : null;
+  // ─── PRICE CALCULATION LOGIC ───
+  const adultPriceBase = getLocalizedPrice(trip.priceAdult) || getLocalizedPrice(trip.price);
+  const childPrice = getLocalizedPrice(trip.priceChild);
+  const salePrice = getLocalizedPrice(trip.salePrice);
+
+  // Determine if there is a discount
+  const hasDiscount = salePrice > 0 && salePrice < adultPriceBase;
+  const finalAdultPrice = hasDiscount ? salePrice : adultPriceBase;
+  const discountPercentage = hasDiscount 
+    ? Math.round(((adultPriceBase - salePrice) / adultPriceBase) * 100) 
+    : 0;
 
   const formatMoney = (amount: number) => {
     if (language === 'en') return `$${amount.toLocaleString()}`;
@@ -114,6 +126,9 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
       itineraryTitle: "Аяллын хөтөлбөр",
       itineraryEmpty: "Дэлгэрэнгүй хөтөлбөр удахгүй орно.",
       priceLabel: "Нийт үнэ (1 хүн)",
+      adultLabel: "Том хүн (12+)",
+      childLabel: "Хүүхэд (3-11)",
+      saveBadge: "ХЯМДРАЛ",
       typeLabel: "Аяллын төрөл:",
       durationLabel: "Хугацаа:",
       seatsLabel: "Боломжит суудал:",
@@ -142,6 +157,9 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
       itineraryTitle: "Itinerary",
       itineraryEmpty: "Detailed itinerary coming soon.",
       priceLabel: "Total Price (per person)",
+      adultLabel: "Adult (12+)",
+      childLabel: "Child (3-11)",
+      saveBadge: "OFF",
       typeLabel: "Trip Type:",
       durationLabel: "Duration:",
       seatsLabel: "Available Seats:",
@@ -170,6 +188,9 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
       itineraryTitle: "여행 일정",
       itineraryEmpty: "자세한 일정은 곧 제공됩니다.",
       priceLabel: "총 가격 (1인당)",
+      adultLabel: "성인 (12+)",
+      childLabel: "아동 (3-11)",
+      saveBadge: "할인",
       typeLabel: "여행 유형:",
       durationLabel: "기간:",
       seatsLabel: "남은 좌석:",
@@ -228,7 +249,8 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
           guestName: formData.name,
           guestEmail: formData.email,
           guestPhone: formData.phone,
-          language: language
+          language: language,
+          totalPrice: (finalAdultPrice * formData.guests) // Simplified calculation for now
         }),
       });
 
@@ -331,19 +353,39 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
 
         {/* RIGHT COLUMN (Price & Booking) */}
         <div className="lg:col-span-1">
-           <div className="sticky top-24">
+           <div className="sticky top-24 h-fit">
               <motion.div 
                  className="bg-white rounded-3xl p-6 shadow-2xl shadow-sky-100 border border-slate-100"
               >
+                 {/* PRICE CARD HEADER */}
                  <div className="mb-6">
-                    <p className="text-slate-500 text-sm font-bold uppercase mb-1">{text.priceLabel}</p>
-                    <div className="flex items-end gap-3">
-                       <span className="text-4xl font-black text-slate-900">{formatMoney(priceValue)}</span>
-                       {oldPriceValue && (
-                         <span className="text-lg text-slate-400 line-through mb-1 decoration-red-400">
-                            {formatMoney(oldPriceValue)}
-                         </span>
-                       )}
+                    {hasDiscount && (
+                      <div className="bg-rose-500 text-white text-xs font-bold px-3 py-1.5 rounded-full mb-3 w-fit shadow-md shadow-rose-200">
+                        {discountPercentage}% {text.saveBadge}
+                      </div>
+                    )}
+
+                    <div className="space-y-4">
+                        {/* Adult Price */}
+                        <div>
+                            <p className="text-slate-500 text-xs font-bold uppercase mb-1">{text.adultLabel}</p>
+                            <div className="flex items-end gap-3">
+                                <span className="text-4xl font-black text-slate-900">{formatMoney(finalAdultPrice)}</span>
+                                {hasDiscount && (
+                                    <span className="text-lg text-slate-400 line-through mb-1 decoration-rose-400 decoration-2">
+                                        {formatMoney(adultPriceBase)}
+                                    </span>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Child Price (if exists) */}
+                        {childPrice > 0 && (
+                            <div className="pt-3 border-t border-slate-100">
+                                <p className="text-slate-400 text-xs font-bold uppercase mb-1">{text.childLabel}</p>
+                                <span className="text-xl font-bold text-slate-700">{formatMoney(childPrice)}</span>
+                            </div>
+                        )}
                     </div>
                  </div>
 

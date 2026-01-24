@@ -42,6 +42,9 @@ export interface Trip {
   rating: number;
   image: string;
   price: LocalizedPrice;
+  priceAdult?: LocalizedPrice; // New: Adult Price
+  priceChild?: LocalizedPrice; // New: Child Price
+  salePrice?: LocalizedPrice;  // New: Discounted Price (overrides priceAdult)
   tags?: string[];
   featured?: boolean;
   oldPrice?: number;
@@ -50,6 +53,7 @@ export interface Trip {
   saleMonth?: number;
   seatsLeft?: number;
   itinerary?: ItineraryItem[];
+  availableDates?: { date: string; status: string }[]; // New flexible dates
   dates: TripDate[];
 }
 function mapTrip(doc: any): Trip {

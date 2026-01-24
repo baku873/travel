@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import { Metadata } from 'next';
 import '../globals.css';
 import { LanguageProvider } from '../context/LanguageContext';
+import { CurrencyProvider } from '../context/CurrencyContext';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { ClerkProvider } from '@clerk/nextjs';
@@ -138,11 +139,13 @@ export default async function RootLayout(props: {
             dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
           />
           <LanguageProvider initialLang={params.lang as any}>
-            <Navbar dictionary={dict.nav} />
-            <main className="min-h-screen pt-20">
-              {children}
-            </main>
-            <Footer dictionary={dict.footer} navDictionary={dict.nav} />
+            <CurrencyProvider>
+              <Navbar dictionary={dict.nav} />
+              <main className="min-h-screen pt-20">
+                {children}
+              </main>
+              <Footer dictionary={dict.footer} navDictionary={dict.nav} />
+            </CurrencyProvider>
           </LanguageProvider>
         </body>
       </html>

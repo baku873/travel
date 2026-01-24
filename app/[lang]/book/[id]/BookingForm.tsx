@@ -32,7 +32,8 @@ export default function BookingForm({ trip }: { trip: Trip }) {
   const [formData, setFormData] = useState({
     name: user?.fullName || "",
     phone: "",
-    email: user?.primaryEmailAddress?.emailAddress || ""
+    email: user?.primaryEmailAddress?.emailAddress || "",
+    customRequest: "" // New field for custom dates
   });
 
   // Calculate Display Price
@@ -290,7 +291,7 @@ export default function BookingForm({ trip }: { trip: Trip }) {
           </div>
 
           <div className="lg:col-span-1">
-            <div className="sticky top-24 space-y-6">
+            <div className="sticky top-24 space-y-6 h-fit">
               <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.2 }} className="bg-white rounded-3xl p-6 shadow-xl shadow-slate-200/50 border border-slate-200">
                 <div className="aspect-video w-full rounded-2xl overflow-hidden mb-4 relative">
                   <img src={trip.image} alt={trip.title[language]} className="w-full h-full object-cover" />

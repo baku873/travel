@@ -188,6 +188,8 @@ const PackageCard = ({ pkg, language }: { pkg: Trip, language: "mn" | "en" | "ko
     return `${amount.toLocaleString()}₮`; // Default MN
   };
 
+  const imageSrc = pkg.image && pkg.image.trim() !== "" ? pkg.image : "/try.png";
+
   return (
     <motion.div
       layout
@@ -200,7 +202,7 @@ const PackageCard = ({ pkg, language }: { pkg: Trip, language: "mn" | "en" | "ko
       <div className="relative h-64 overflow-hidden">
         <Link href={`/tours/${pkg._id}`}>
           <img 
-            src={pkg.image} 
+            src={imageSrc} 
             alt={pkg.title[language] || "Trip"} 
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 cursor-pointer" 
           />
