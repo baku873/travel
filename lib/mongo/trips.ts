@@ -50,6 +50,9 @@ export interface Trip {
   oldPrice?: number;
   reviews?: number;
   perks?: string[];
+  highlights?: LocalizedString[];       // New: Bullet points for highlights
+  includedServices?: LocalizedString[]; // New: Included items
+  excludedServices?: LocalizedString[]; // New: Excluded items
   saleMonth?: number;
   seatsLeft?: number;
   itinerary?: ItineraryItem[];

@@ -16,7 +16,8 @@ import {
   FaUsers, 
   FaCheckCircle, 
   FaClipboardList,
-  FaTimes
+  FaTimes,
+  FaCheck
 } from "react-icons/fa";
 import { useLanguage } from "@/app/context/LanguageContext";
 
@@ -49,6 +50,9 @@ interface Trip {
   duration: LocalizedString;
   description?: LocalizedString;
   perks?: string[];
+  highlights?: LocalizedString[];       // New
+  includedServices?: LocalizedString[]; // New
+  excludedServices?: LocalizedString[]; // New
   itinerary?: ItineraryItem[];
   price: LocalizedPrice | number; 
   priceAdult?: LocalizedPrice; // New: Adult Price
@@ -122,7 +126,9 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
     mn: {
       back: "Буцах",
       about: "Аяллын тухай",
-      features: { flight: "Нислэг", food: "Хоол", visa: "Виз", planning: "Төлөвлөгөө" },
+      highlights: "Аяллын онцлог",
+      included: "Үнэд багтсан зүйлс",
+      excluded: "Үнэд багтаагүй зүйлс",
       itineraryTitle: "Аяллын хөтөлбөр",
       itineraryEmpty: "Дэлгэрэнгүй хөтөлбөр удахгүй орно.",
       priceLabel: "Нийт үнэ (1 хүн)",
@@ -153,7 +159,9 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
     en: {
       back: "Back",
       about: "About the Trip",
-      features: { flight: "Flight", food: "Meals", visa: "Visa", planning: "Planning" },
+      highlights: "Trip Highlights",
+      included: "What's Included",
+      excluded: "What's Not Included",
       itineraryTitle: "Itinerary",
       itineraryEmpty: "Detailed itinerary coming soon.",
       priceLabel: "Total Price (per person)",
@@ -184,7 +192,9 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
     ko: {
       back: "뒤로가기",
       about: "여행 정보",
-      features: { flight: "항공편", food: "식사", visa: "비자", planning: "계획" },
+      highlights: "여행 하이라이트",
+      included: "포함 사항",
+      excluded: "불포함 사항",
       itineraryTitle: "여행 일정",
       itineraryEmpty: "자세한 일정은 곧 제공됩니다.",
       priceLabel: "총 가격 (1인당)",
@@ -313,40 +323,101 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
       <div className="container mx-auto px-4 -mt-10 relative z-20 grid grid-cols-1 lg:grid-cols-3 gap-10">
         
         {/* LEFT COLUMN (Details & Itinerary) */}
-        <div className="lg:col-span-2 space-y-8">
+        <div className="lg:col-span-2 space-y-10">
+            
+            {/* ABOUT & HIGHLIGHTS */}
             <div className="bg-white rounded-3xl p-8 shadow-xl shadow-slate-200/50 border border-slate-100">
              <h2 className="text-2xl font-bold text-slate-800 mb-4">{text.about}</h2>
-             <p className="text-slate-600 leading-relaxed text-lg">{trip.description?.[language]}</p>
-             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 pt-8 border-t border-slate-100">
-                <FeatureIcon icon={FaPlane} label={text.features.flight} />
-                <FeatureIcon icon={FaUtensils} label={text.features.food} />
-                <FeatureIcon icon={FaPassport} label={text.features.visa} />
-                <FeatureIcon icon={FaClipboardList} label={text.features.planning} />
+             <p className="text-slate-600 leading-relaxed text-lg mb-8">{trip.description?.[language]}</p>
+             
+             {/* TRIP HIGHLIGHTS */}
+             {trip.highlights && trip.highlights.length > 0 && (
+               <div className="mb-8 p-6 bg-sky-50 rounded-2xl border border-sky-100">
+                 <h3 className="text-lg font-bold text-sky-900 mb-4 flex items-center gap-2">
+                   <FaStar className="text-sky-500" /> {text.highlights}
+                 </h3>
+                 <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                   {trip.highlights.map((highlight, index) => (
+                     <li key={index} className="flex items-start gap-2 text-slate-700">
+                       <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-sky-500 flex-shrink-0" />
+                       <span className="text-sm font-medium leading-relaxed">{highlight[language] || highlight.mn}</span>
+                     </li>
+                   ))}
+                 </ul>
+               </div>
+             )}
+
+             {/* INCLUDED / EXCLUDED GRID */}
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-slate-100 pt-8">
+                {/* Included */}
+                <div>
+                  <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <FaCheckCircle className="text-green-500" /> {text.included}
+                  </h3>
+                  <ul className="space-y-3">
+                    {trip.includedServices?.map((item, i) => (
+                      <li key={i} className="flex items-start gap-3 text-sm text-slate-600">
+                        <FaCheck className="text-green-500 mt-1 shrink-0 text-xs" />
+                        <span>{item[language] || item.mn}</span>
+                      </li>
+                    )) || (
+                      // Fallback content if empty
+                      <>
+                        <li className="flex items-start gap-3 text-sm text-slate-600"><FaCheck className="text-green-500 mt-1 shrink-0 text-xs" /> Accommodation</li>
+                        <li className="flex items-start gap-3 text-sm text-slate-600"><FaCheck className="text-green-500 mt-1 shrink-0 text-xs" /> Transportation</li>
+                      </>
+                    )}
+                  </ul>
+                </div>
+
+                {/* Excluded */}
+                <div>
+                  <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <FaTimes className="text-red-500" /> {text.excluded}
+                  </h3>
+                  <ul className="space-y-3">
+                    {trip.excludedServices?.map((item, i) => (
+                      <li key={i} className="flex items-start gap-3 text-sm text-slate-600">
+                        <FaTimes className="text-red-400 mt-1 shrink-0 text-xs" />
+                        <span>{item[language] || item.mn}</span>
+                      </li>
+                    )) || (
+                      // Fallback content if empty
+                      <>
+                        <li className="flex items-start gap-3 text-sm text-slate-600"><FaTimes className="text-red-400 mt-1 shrink-0 text-xs" /> International Flights</li>
+                        <li className="flex items-start gap-3 text-sm text-slate-600"><FaTimes className="text-red-400 mt-1 shrink-0 text-xs" /> Personal Expenses</li>
+                      </>
+                    )}
+                  </ul>
+                </div>
              </div>
           </div>
           
            {/* ITINERARY SECTION */}
            <div className="bg-white rounded-3xl p-8 shadow-xl shadow-slate-200/50 border border-slate-100">
-             <h2 className="text-2xl font-bold text-slate-800 mb-6">{text.itineraryTitle}</h2>
+             <h2 className="text-2xl font-bold text-slate-800 mb-8">{text.itineraryTitle}</h2>
              {itinerary.length > 0 ? (
-               <div className="space-y-0">
+               <div className="relative border-l-2 border-slate-100 ml-3 space-y-10">
                   {itinerary.map((day, i) => (
-                    <div key={i} className="flex gap-4 relative pb-8 last:pb-0">
-                       {i !== itinerary.length - 1 && (
-                         <div className="absolute left-[19px] top-8 bottom-0 w-0.5 bg-slate-100" />
-                       )}
-                       <div className="flex-shrink-0 w-10 h-10 rounded-full bg-sky-50 border-2 border-sky-100 text-sky-600 font-bold flex items-center justify-center relative z-10">
-                          {day.day}
+                    <div key={i} className="relative pl-8">
+                       {/* Timeline Dot */}
+                       <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-white border-4 border-sky-500 shadow-sm" />
+                       
+                       <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 mb-2">
+                         <span className="text-xs font-bold uppercase tracking-wider text-sky-600 bg-sky-50 px-2 py-1 rounded-md">
+                           Day {day.day}
+                         </span>
+                         <h4 className="text-lg font-bold text-slate-800">{day.title[language]}</h4>
                        </div>
-                       <div>
-                          <h4 className="font-bold text-slate-800 text-lg mb-1">{day.title[language]}</h4>
-                          <p className="text-slate-500 text-sm leading-relaxed">{day.desc[language]}</p>
+                       
+                       <div className="text-slate-600 text-sm leading-7 bg-slate-50/50 p-4 rounded-xl border border-slate-50">
+                         {day.desc[language]}
                        </div>
                     </div>
                   ))}
                </div>
              ) : (
-               <p className="text-slate-500 italic">{text.itineraryEmpty}</p>
+               <p className="text-slate-500 italic text-center py-8">{text.itineraryEmpty}</p>
              )}
           </div>
         </div>
