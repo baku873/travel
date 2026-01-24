@@ -55,6 +55,8 @@ const Navbar: React.FC<{ dictionary: any }> = ({ dictionary }) => {
     { id: "about", label: t.about || "About", href: `/${language}/about` },
   ];
 
+  const dashboardLabel = language === 'mn' ? "Миний аялал" : language === 'ko' ? "내 예약" : "Dashboard";
+
   const mobileTabs = useMemo(() => [
     { id: "home", href: `/${language}`, icon: HiOutlineHome, activeIcon: HiHome },
     { id: "stats", href: `/${language}/packages`, icon: HiOutlineChartBar, activeIcon: HiChartBar },
@@ -89,6 +91,11 @@ const Navbar: React.FC<{ dictionary: any }> = ({ dictionary }) => {
                  {link.label}
                </Link>
             ))}
+            <SignedIn>
+              <Link href={`/${language}/dashboard`} className="text-sm font-bold text-blue-600 hover:text-blue-700">
+                {dashboardLabel}
+              </Link>
+            </SignedIn>
           </div>
 
           <div className="flex items-center gap-4">
