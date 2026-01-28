@@ -9,6 +9,11 @@ import Footer from '../components/Footer';
 import { ClerkProvider } from '@clerk/nextjs';
 import { i18n } from '@/i18n-config';
 import { getDictionary } from '@/get-dictionary';
+import { SafeAreaProvider } from '../components/SafeAreaProvider';
+import { AppInitializer } from '../components/AppInitializer';
+import { MobileWrapper } from '../components/MobileWrapper';
+import { ExternalLinkHandler } from '../components/ExternalLinkHandler';
+import { MobileLayout } from '../components/MobileLayout';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -115,15 +120,23 @@ export default async function RootLayout(props: {
           <link rel="preconnect" href="https://www.transparenttextures.com" />
         </head>
         <body className={inter.className}>
-          <LanguageProvider initialLang={params.lang as any}>
-            <CurrencyProvider>
-              <Navbar dictionary={dict.nav} />
-              <main className="min-h-screen pt-20">
-                {children}
-              </main>
-              <Footer dictionary={dict.footer} navDictionary={dict.nav} />
-            </CurrencyProvider>
-          </LanguageProvider>
+          <SafeAreaProvider>
+            <MobileWrapper>
+              <MobileLayout>
+                <AppInitializer />
+                <ExternalLinkHandler />
+                <LanguageProvider initialLang={params.lang as any}>
+                  <CurrencyProvider>
+                    <Navbar dictionary={dict.nav} />
+                    <main className="min-h-screen pt-20">
+                      {children}
+                    </main>
+                    <Footer dictionary={dict.footer} navDictionary={dict.nav} />
+                  </CurrencyProvider>
+                </LanguageProvider>
+              </MobileLayout>
+            </MobileWrapper>
+          </SafeAreaProvider>
         </body>
       </html>
     </ClerkProvider>

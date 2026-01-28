@@ -31,7 +31,7 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ language, dictionary 
     const safeIndex = activeIndex !== -1 ? activeIndex : 0;
 
     return (
-        <div className="fixed bottom-0 inset-x-0 z-50 md:hidden flex justify-center pb-8 px-4">
+        <div className="fixed bottom-0 inset-x-0 z-50 md:hidden native-app:block flex justify-center pb-8 px-4 mobile-bottom-nav">
             <div className="relative w-full max-w-md h-[85px] flex items-center justify-around bg-transparent overflow-visible">
 
                 {/* THE SVG NOTCH BACKGROUND */}

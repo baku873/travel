@@ -197,3 +197,37 @@ export async function getTripById(id: string) {
     return null;
   }
 }
+
+// 12. Get Recommendations based on interests/budget
+export async function getRecommendations(preferences: any) {
+  const client = await clientPromise;
+  const collection = client.db(DB_NAME).collection(COLLECTION);
+
+  const query: any = {};
+
+  // Basic matching logic:
+  // If interests are provided, match against tags or category
+  if (preferences.interests && preferences.interests.length > 0) {
+    query.$or = [
+      { tags: { $in: preferences.interests } },
+      { category: { $in: preferences.interests } }
+    ];
+  }
+
+  // Budget filtering (optional, loose matching)
+  // If budget provided, filter trips that are roughly within range (e.g., +20%)
+  if (preferences.budget) {
+    const budgetNum = parseInt(preferences.budget);
+    if (!isNaN(budgetNum)) {
+      // Assuming 'price.en' is a good proxy for base price
+      query["price.en"] = { $lte: budgetNum * 1.2 };
+    }
+  }
+
+  const trips = await collection
+    .find(query)
+    .limit(3) // Top 3 recommendations
+    .toArray();
+
+  return trips.map(mapTrip);
+}

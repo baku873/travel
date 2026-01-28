@@ -137,6 +137,31 @@ export default async function TourPage({ params }: PageProps) {
     ],
   };
 
+  const tripJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'TouristTrip',
+    name: trip.title[lang] || trip.title.en,
+    description: trip.description?.[lang] || trip.description?.en,
+    image: trip.image,
+    touristType: [trip.ageGroup?.[lang] || trip.ageGroup?.en || "Everyone"],
+    itinerary: trip.itinerary?.map(item => ({
+      '@type': 'City',
+      name: item.title[lang] || item.title.en,
+      description: item.desc[lang] || item.desc.en
+    })),
+    offers: {
+      '@type': 'Offer',
+      price: typeof trip.price === 'number' ? trip.price : (trip.price?.[lang] || trip.price?.en || 0),
+      priceCurrency: 'USD',
+      url: `${baseUrl}/${lang}/tours/${id}`
+    },
+    provider: {
+      '@type': 'TravelAgency',
+      name: 'Mongol Trail',
+      url: 'https://www.mongoltrail.com'
+    }
+  };
+
   return (
     <>
       <script
@@ -146,6 +171,10 @@ export default async function TourPage({ params }: PageProps) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(tripJsonLd) }}
       />
       <TourDetailClient trip={trip} />
     </>

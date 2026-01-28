@@ -73,6 +73,116 @@ const CustomTripForm = ({ dictionary }: { dictionary: any }) => {
         hiking: "Hiking"
     };
 
+
+    const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+    const [recommendations, setRecommendations] = useState<any[]>([]);
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setStatus("submitting");
+
+        try {
+            const res = await fetch("/api/custom-trip", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData),
+            });
+
+            if (!res.ok) throw new Error("Failed to submit");
+
+            const data = await res.json();
+            setRecommendations(data.recommendations || []);
+            setStatus("success");
+        } catch (error) {
+            console.error(error);
+            setStatus("error");
+        }
+    };
+
+    if (status === "success") {
+        return (
+            <div className="max-w-4xl mx-auto space-y-12">
+                <div className="bg-white rounded-[40px] shadow-2xl p-12 text-center space-y-6">
+                    <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto">
+                        <Check className="w-10 h-10" />
+                    </div>
+                    <h2 className="text-3xl font-black text-slate-800">Inquiry Received!</h2>
+                    <p className="text-slate-600 text-lg">
+                        Thank you, {formData.fullName}. Our travel consultants will review your preferences and craft a custom itinerary for you shortly. We will contact you at {formData.email}.
+                    </p>
+
+                    <button
+                        onClick={() => {
+                            setStatus("idle");
+                            setRecommendations([]);
+                            setFormData({
+                                adults: 2,
+                                children: 0,
+                                infants: 0,
+                                ages: [],
+                                hotel: "4stars",
+                                interests: [],
+                                arrivalDate: "",
+                                isFlexible: false,
+                                duration: "",
+                                budget: "",
+                                otherIdeas: "",
+                                fullName: "",
+                                email: "",
+                                nationality: "",
+                                phone: ""
+                            });
+                        }}
+                        className="px-8 py-3 bg-sky-500 text-white rounded-xl font-bold hover:bg-sky-600 transition-colors"
+                    >
+                        Create Another Inquiry
+                    </button>
+                </div>
+
+                {recommendations.length > 0 && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2 }}
+                        className="space-y-6"
+                    >
+                        <h3 className="text-2xl font-black text-slate-800 text-center">
+                            Based on your interests, you might like:
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {recommendations.map((trip) => (
+                                <a key={trip._id} href={`/tours/${trip._id}`} target="_blank" rel="noopener noreferrer" className="group block bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition-all">
+                                    <div className="relative h-48">
+                                        <img
+                                            src={trip.image || "/try.png"}
+                                            alt={trip.title?.en}
+                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                        />
+                                        <div className="absolute top-3 left-3 bg-white/90 backdrop-blur text-xs font-bold px-3 py-1 rounded-full uppercase">
+                                            {trip.category}
+                                        </div>
+                                    </div>
+                                    <div className="p-6">
+                                        <h4 className="font-black text-xl text-slate-800 mb-2 group-hover:text-sky-600 transition-colors">
+                                            {trip.title?.en || "Trip Title"}
+                                        </h4>
+                                        <div className="flex items-center gap-4 text-sm text-slate-500 mb-4">
+                                            <span className="flex items-center gap-1"><Clock className="w-4 h-4 text-sky-400" /> {trip.duration?.en} days</span>
+                                            {trip.price?.en && <span className="flex items-center gap-1 font-bold text-slate-700">${trip.price.en}</span>}
+                                        </div>
+                                        <div className="text-sky-500 font-bold text-sm flex items-center gap-1 group-hover:gap-2 transition-all">
+                                            View Details <Check className="w-4 h-4" />
+                                        </div>
+                                    </div>
+                                </a>
+                            ))}
+                        </div>
+                    </motion.div>
+                )}
+            </div>
+        );
+    }
+
     return (
         <div className="max-w-4xl mx-auto bg-white rounded-[40px] shadow-2xl shadow-sky-100/50 overflow-hidden border border-sky-50 transition-all duration-500">
             {/* Header */}
@@ -93,7 +203,7 @@ const CustomTripForm = ({ dictionary }: { dictionary: any }) => {
                 <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-sky-800/20 rounded-full blur-[80px]" />
             </div>
 
-            <form className="p-8 md:p-12 space-y-12" onSubmit={(e) => e.preventDefault()}>
+            <form className="p-8 md:p-12 space-y-12" onSubmit={handleSubmit}>
                 {/* Section 1: Travel Party */}
                 <section>
                     <div className="flex items-center gap-3 mb-8">
@@ -195,8 +305,8 @@ const CustomTripForm = ({ dictionary }: { dictionary: any }) => {
                     <div className="flex flex-wrap gap-4">
                         {Object.entries(interestItems).map(([key, label]: [string, any]) => (
                             <button
-                                key={key}
                                 type="button"
+                                key={key}
                                 onClick={() => toggleInterest(label)}
                                 className={`px-8 py-4 rounded-2xl border-2 font-black text-xs uppercase tracking-widest transition-all duration-300 ${formData.interests.includes(label)
                                     ? "bg-sky-500 border-sky-500 text-white shadow-xl shadow-sky-200"
@@ -258,26 +368,41 @@ const CustomTripForm = ({ dictionary }: { dictionary: any }) => {
                             className="w-full p-5 bg-white border border-slate-100 rounded-2xl focus:outline-none focus:border-sky-500 font-bold transition-all"
                             value={formData.fullName}
                             onChange={(e) => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
+                            required
                         />
                         <input
                             type="email" placeholder={t.contact?.emailPlaceholder || "Email Address"}
                             className="w-full p-5 bg-white border border-slate-100 rounded-2xl focus:outline-none focus:border-sky-500 font-bold transition-all"
                             value={formData.email}
                             onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                            required
+                        />
+                        <input
+                            type="tel" placeholder={t.contact?.phonePlaceholder || "Phone Number"}
+                            className="w-full p-5 bg-white border border-slate-100 rounded-2xl focus:outline-none focus:border-sky-500 font-bold transition-all"
+                            value={formData.phone}
+                            onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
                         />
                     </div>
                 </div>
 
                 <button
                     type="submit"
-                    className="group relative w-full py-6 bg-slate-900 overflow-hidden rounded-[30px] font-black text-white uppercase tracking-[0.2em] shadow-2xl transition-all duration-500"
+                    disabled={status === "submitting"}
+                    className="group relative w-full py-6 bg-slate-900 overflow-hidden rounded-[30px] font-black text-white uppercase tracking-[0.2em] shadow-2xl transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     <div className="absolute inset-0 bg-sky-500 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-                    <span className="relative z-10 group-hover:text-white transition-colors">{t.submit || "Dispatch Inquiry"}</span>
+                    <span className="relative z-10 group-hover:text-white transition-colors">
+                        {status === "submitting" ? "Dispatching..." : (t.submit || "Dispatch Inquiry")}
+                    </span>
                 </button>
+                {status === "error" && (
+                    <p className="text-red-500 text-center font-bold">Something went wrong. Please try again.</p>
+                )}
             </form>
         </div>
     );
 };
+
 
 export default CustomTripForm;

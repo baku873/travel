@@ -83,6 +83,43 @@ export default async function Home(props: { params: Promise<{ lang: Locale }> })
           })
         }}
       />
+
+      {/* FAQ Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: [
+              {
+                '@type': 'Question',
+                name: 'What is the best time to visit Mongolia?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'The best time to visit Mongolia is from June to August for warm weather and festivals like Naadam. For winter adventure lovers, February is great for the Ice Festival.'
+                }
+              },
+              {
+                '@type': 'Question',
+                name: 'Do I need a visa for Mongolia?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'Many countries, including South Korea and several European nations, have visa-free access to Mongolia for tourism. Check the latest regulations or contact us for assistance.'
+                }
+              },
+              {
+                '@type': 'Question',
+                name: 'Are Mongol Trail tours suitable for families?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'Yes! We offer specialized family packages with kid-friendly activities, comfortable transport, and flexible itineraries.'
+                }
+              }
+            ]
+          })
+        }}
+      />
       {/* Load Hero independently */}
       <Suspense fallback={<div className="h-screen w-full bg-slate-900 animate-pulse" />}>
         <HeroWrapper lang={params.lang} />

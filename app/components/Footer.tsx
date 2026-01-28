@@ -30,7 +30,7 @@ const Footer: React.FC<{ dictionary: any, navDictionary: any }> = ({ dictionary,
   ];
 
   return (
-    <footer className="relative bg-slate-900 pt-32 pb-10 overflow-hidden">
+    <footer className="relative bg-slate-900 pt-32 pb-10 overflow-hidden hide-in-native-app">
 
       {/* ─── 1. CURVED TOP WAVE ─── */}
       <div className="absolute top-0 left-0 w-full overflow-hidden leading-[0]">
