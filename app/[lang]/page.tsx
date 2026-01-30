@@ -6,6 +6,7 @@ import TripReviews from "../components/TripReviews";
 import { Metadata } from 'next';
 import { getDictionary } from "@/get-dictionary";
 import { Locale } from "@/i18n-config";
+import StructuredData from "../components/seo/StructuredData";
 
 export const revalidate = 3600;
 
@@ -43,81 +44,76 @@ export default async function Home(props: { params: Promise<{ lang: Locale }> })
   return (
     <>
       {/* Organization Schema - Knowledge Graph */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'TravelAgency',
-            name: 'Mongol Trail',
-            url: 'https://www.mongoltrail.com',
-            logo: 'https://www.mongoltrail.com/logo.png',
-            sameAs: [
-              'https://www.facebook.com/mongoltrail',
-              'https://www.instagram.com/mongoltrail'
-            ],
-            priceRange: '$$$',
-            address: {
-              '@type': 'PostalAddress',
-              addressLocality: 'Ulaanbaatar',
-              addressCountry: 'MN'
-            }
-          })
+      <StructuredData
+        type="Organization"
+        data={{
+          name: 'Mongol Trail',
+          url: 'https://www.mongoltrail.com',
+          logo: 'https://www.mongoltrail.com/logo.png',
+          sameAs: [
+            'https://www.facebook.com/mongoltrail',
+            'https://www.instagram.com/mongoltrail'
+          ],
+          priceRange: '$$$',
+          address: {
+            '@type': 'PostalAddress',
+            addressLocality: 'Ulaanbaatar',
+            addressCountry: 'MN'
+          },
+          contactPoint: {
+            '@type': 'ContactPoint',
+            telephone: '+976-99123456',
+            contactType: 'customer service',
+            areaServed: ['US', 'DE', 'KR'],
+            availableLanguage: ['en', 'mn', 'ko', 'de']
+          }
         }}
       />
 
       {/* WebSite Schema - Search Action */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'WebSite',
-            name: 'Mongol Trail',
-            url: 'https://www.mongoltrail.com',
-            potentialAction: {
-              '@type': 'SearchAction',
-              target: 'https://www.mongoltrail.com/packages?q={search_term_string}',
-              'query-input': 'required name=search_term_string'
-            }
-          })
+      <StructuredData
+        type="WebSite"
+        data={{
+          name: 'Mongol Trail',
+          url: 'https://www.mongoltrail.com',
+          potentialAction: {
+            '@type': 'SearchAction',
+            target: 'https://www.mongoltrail.com/packages?q={search_term_string}',
+            'query-input': 'required name=search_term_string'
+          }
         }}
       />
 
       {/* FAQ Schema */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'FAQPage',
-            mainEntity: [
-              {
-                '@type': 'Question',
-                name: 'What is the best time to visit Mongolia?',
-                acceptedAnswer: {
-                  '@type': 'Answer',
-                  text: 'The best time to visit Mongolia is from June to August for warm weather and festivals like Naadam. For winter adventure lovers, February is great for the Ice Festival.'
-                }
-              },
-              {
-                '@type': 'Question',
-                name: 'Do I need a visa for Mongolia?',
-                acceptedAnswer: {
-                  '@type': 'Answer',
-                  text: 'Many countries, including South Korea and several European nations, have visa-free access to Mongolia for tourism. Check the latest regulations or contact us for assistance.'
-                }
-              },
-              {
-                '@type': 'Question',
-                name: 'Are Mongol Trail tours suitable for families?',
-                acceptedAnswer: {
-                  '@type': 'Answer',
-                  text: 'Yes! We offer specialized family packages with kid-friendly activities, comfortable transport, and flexible itineraries.'
-                }
+      <StructuredData
+        type="FAQPage"
+        data={{
+          mainEntity: [
+            {
+              '@type': 'Question',
+              name: 'What is the best time to visit Mongolia?',
+              acceptedAnswer: {
+                '@type': 'Answer',
+                text: 'The best time to visit Mongolia is from June to August for warm weather and festivals like Naadam. For winter adventure lovers, February is great for the Ice Festival.'
               }
-            ]
-          })
+            },
+            {
+              '@type': 'Question',
+              name: 'Do I need a visa for Mongolia?',
+              acceptedAnswer: {
+                '@type': 'Answer',
+                text: 'Many countries, including South Korea and several European nations, have visa-free access to Mongolia for tourism. Check the latest regulations or contact us for assistance.'
+              }
+            },
+            {
+              '@type': 'Question',
+              name: 'Are Mongol Trail tours suitable for families?',
+              acceptedAnswer: {
+                '@type': 'Answer',
+                text: 'Yes! We offer specialized family packages with kid-friendly activities, comfortable transport, and flexible itineraries.'
+              }
+            }
+          ]
         }}
       />
       {/* Load Hero independently */}

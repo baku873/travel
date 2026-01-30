@@ -19,20 +19,26 @@ const inter = Inter({ subsets: ['latin'] });
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
+  const dict = await getDictionary(lang as any);
   const baseUrl = 'https://www.mongoltrail.com';
+
+  const localizedTitle = lang === 'mn'
+    ? 'Албан ёсны Mongol Trail | Адал явдалт аялал'
+    : lang === 'ko'
+      ? '공식 Mongol Trail | 몽골 프리미엄 여행 & 트레킹'
+      : 'Official Mongol Trail | Your Gateway to Adventure';
 
   return {
     metadataBase: new URL(baseUrl),
     title: {
-      default: 'Official Mongol Trail | Your Gateway to Adventure',
-      template: '%s | Mongol Trail - Premium Mongolia Private Tours',
+      default: localizedTitle,
+      template: '%s | Mongol Trail',
     },
-    description: 'Experience the ultimate adventure with Mongol Trail. We offer premier tours across Mongolia, Europe, and the world. Book your next hiking, cultural, or overland trip today.',
+    description: dict.featured.desc || 'Experience the ultimate adventure with Mongol Trail. Premier tours across Mongolia and the world.',
     keywords: [
-      'Mongol Trail', 'Mongolia hiking tours', 'Best trekking routes in Mongolia',
-      'Mongolia trail guide', 'Guided hiking Mongolia', 'Horseback riding trails Mongolia',
-      'Mongolia adventure travel agency', 'Mongolia Travel', 'Adventure Tours',
-      'Hiking Mongolia', 'Euro Trails', 'World Travel', 'Overland Trip'
+      'Mongolia Travel', 'Gobi Desert Tours', 'Nomadic Expeditions',
+      'Mongolia Hiking', 'Adventure Travel Mongolia', 'Horseback Riding Mongolia',
+      'Mongol Trail', 'Visit Mongolia', 'Mongolia Tourism'
     ],
     authors: [{ name: 'Mongol Trail Team' }],
     creator: 'Mongol Trail',
@@ -42,15 +48,21 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       address: true,
       telephone: true,
     },
-    verification: {
-      google: 'YOUR_GOOGLE_VERIFICATION_CODE',
+    alternates: {
+      canonical: `${baseUrl}/${lang}`,
+      languages: {
+        'en': `${baseUrl}/en`,
+        'mn': `${baseUrl}/mn`,
+        'ko': `${baseUrl}/ko`,
+        'x-default': `${baseUrl}/en`
+      },
     },
     openGraph: {
       type: 'website',
       locale: lang === 'mn' ? 'mn_MN' : lang === 'ko' ? 'ko_KR' : 'en_US',
       url: `${baseUrl}/${lang}`,
-      title: 'Mongol Trail | Your Gateway to Adventure',
-      description: 'Experience the ultimate adventure with Mongol Trail. Premier tours across Mongolia and the world.',
+      title: localizedTitle,
+      description: dict.featured.desc || 'Experience the ultimate adventure with Mongol Trail.',
       siteName: 'Mongol Trail',
       images: [
         {
@@ -61,21 +73,10 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
         },
       ],
     },
-    alternates: {
-      canonical: `${baseUrl}/${lang}`,
-      languages: {
-        'mn-MN': `${baseUrl}/mn`,
-        'en-US': `${baseUrl}/en`,
-        'ko-KR': `${baseUrl}/ko`,
-        'mn': `${baseUrl}/mn`,
-        'en': `${baseUrl}/en`,
-        'ko': `${baseUrl}/ko`,
-      },
-    },
     twitter: {
       card: 'summary_large_image',
-      title: 'Mongol Trail | Your Gateway to Adventure',
-      description: 'Experience the ultimate adventure with Mongol Trail.',
+      title: localizedTitle,
+      description: dict.featured.desc || 'Experience the ultimate adventure with Mongol Trail.',
       creator: '@mongoltrail',
       images: ['/logo.jpg'],
     },
@@ -94,6 +95,11 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
         'max-image-preview': 'large',
         'max-snippet': -1,
       },
+    },
+    icons: {
+      icon: '/image.png',
+      shortcut: '/image.png',
+      apple: '/image.png',
     },
   };
 }

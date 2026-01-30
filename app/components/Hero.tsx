@@ -117,10 +117,15 @@ const Hero = ({ trips, lang, dictionary }: { trips: Trip[], lang: "mn" | "en" | 
 
       {/* ─── 3. Content ─── */}
       <div className="relative z-10 container mx-auto px-6 max-w-screen-2xl w-full grid grid-cols-12 items-center h-full">
+        {/* SEO: Static H1 for search engines */}
+        <h1 className="sr-only">
+          {activeLang === 'mn' ? 'Монголын Аялал Жуулчлал' : activeLang === 'ko' ? '몽골 여행 및 투어' : 'Mongolia Travel & Adventure Tours'}
+        </h1>
+
         {/* Left Column: Text Content */}
         <div className="col-span-12 lg:col-span-7 pt-24 lg:pt-0">
           <AnimatePresence mode="wait">
-            <motion.div
+            <motion.article
               key={activeSlide._id}
               variants={containerVariants}
               initial="hidden"
@@ -146,13 +151,13 @@ const Hero = ({ trips, lang, dictionary }: { trips: Trip[], lang: "mn" | "en" | 
                 </span>
               </motion.div>
 
-              {/* Title */}
-              <motion.h1
+              {/* Title (Now H2 for SEO hierarchy) */}
+              <motion.h2
                 variants={itemVariants}
                 className="text-5xl md:text-7xl lg:text-8xl font-black leading-[1.1] mb-6 text-slate-900 tracking-tight drop-shadow-sm"
               >
                 {t(activeSlide.title)}
-              </motion.h1>
+              </motion.h2>
 
               {/* Description */}
               <motion.p
@@ -184,14 +189,21 @@ const Hero = ({ trips, lang, dictionary }: { trips: Trip[], lang: "mn" | "en" | 
                 </div>
               </motion.div>
 
-              {/* Button */}
-              <motion.div variants={itemVariants}>
+              {/* Buttons */}
+              <motion.div variants={itemVariants} className="flex flex-wrap gap-4">
                 <ShinyButton
-                  link={`/tours/${activeSlide._id}`}
+                  link={`/${activeLang}/tours/${activeSlide._id}`}
                   text={getButtonText()}
                 />
+
+                {/* Secondary Button: Custom Trip */}
+                <Link href={`/${activeLang}/custom-trip`}>
+                  <button className="px-8 py-4 rounded-full bg-white/40 backdrop-blur-md border border-white/60 text-slate-800 font-bold text-lg hover:bg-white/60 transition-all duration-300">
+                    {activeLang === 'mn' ? 'Аялал бүтээх' : activeLang === 'ko' ? '맞춤 여행' : 'Plan Your Own'}
+                  </button>
+                </Link>
               </motion.div>
-            </motion.div>
+            </motion.article>
           </AnimatePresence>
         </div>
 
