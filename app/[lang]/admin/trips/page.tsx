@@ -7,7 +7,17 @@ export default async function AdminTripsPage() {
   const client = await clientPromise;
   const db = client.db("travel_db");
 
-  const tripsRaw = await db.collection("trips").find({}).sort({ createdAt: -1 }).toArray();
+  // Optimize: Fetch only necessary fields for the list view to prevent OOM
+  const tripsRaw = await db.collection("trips").find({})
+    .project({
+      title: 1,
+      image: 1,
+      dates: 1,
+      createdAt: 1,
+      // Minimal fields needed for list display
+    })
+    .sort({ createdAt: -1 })
+    .toArray();
 
   // Serialize data to pass from Server to Client
   const trips = tripsRaw.map(doc => {

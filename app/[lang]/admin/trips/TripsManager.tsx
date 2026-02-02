@@ -209,19 +209,35 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
     setFormData(BLANK_FORM_DATA);
     setIsModalOpen(true);
   };
-  const handleOpenEdit = (trip: Trip) => {
-    setEditingTrip(trip);
-    setFormData({
-      ...BLANK_FORM_DATA,
-      ...trip,
-      itinerary: trip.itinerary || [],
-      dates: trip.dates || [],
-      highlights: trip.highlights || [],
-      includedServices: trip.includedServices || [],
-      excludedServices: trip.excludedServices || [],
-      availableDates: trip.availableDates || []
-    });
+  const handleOpenEdit = async (tripSummary: Trip) => {
+    setEditingTrip(tripSummary); // Set initial summary data
     setIsModalOpen(true);
+    setLoading(true); // Reuse loading state or create a specific one if needed
+
+    try {
+      // Fetch full details
+      const res = await fetch(`/api/trips?id=${tripSummary._id}`);
+      if (!res.ok) throw new Error("Failed to load trip details");
+      const fullTrip = await res.json();
+
+      setEditingTrip(fullTrip);
+      setFormData({
+        ...BLANK_FORM_DATA,
+        ...fullTrip,
+        itinerary: fullTrip.itinerary || [],
+        dates: fullTrip.dates || [],
+        highlights: fullTrip.highlights || [],
+        includedServices: fullTrip.includedServices || [],
+        excludedServices: fullTrip.excludedServices || [],
+        availableDates: fullTrip.availableDates || []
+      });
+    } catch (err) {
+      console.error("Error loading trip details:", err);
+      alert("Failed to load full trip details. Please try again.");
+      setIsModalOpen(false); // Close on error
+    } finally {
+      setLoading(false);
+    }
   };
   const handleCloseModal = () => setIsModalOpen(false);
   const handleTrilingualChange = (field: keyof Trip, lang: Language, value: string) => {
