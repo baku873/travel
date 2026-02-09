@@ -2,6 +2,8 @@ import { Suspense } from "react";
 import HeroWrapper from "../components/HeroWrapper";
 import FeaturedTripsWrapper from "../components/FeaturedTripsWrapper";
 import WhyChooseUs from "../components/WhyChooseUs";
+import TopDestinations from "../components/TopDestinations";
+import FAQ from "../components/FAQ";
 import TripReviews from "../components/TripReviews";
 import { Metadata } from 'next';
 import { getDictionary } from "@/get-dictionary";
@@ -15,25 +17,50 @@ export async function generateMetadata(props: { params: Promise<{ lang: Locale }
   const dict = await getDictionary(params.lang);
 
   const titles = {
-    en: 'Official Mongol Trail | Premier Adventure & Hiking Tours in Mongolia',
-    mn: 'Албан ёсны Mongol Trail | Монголын шилдэг явган аялал, адал явдалт аялал',
-    ko: '공식 Mongol Trail | 몽골 최고의 하이킹 및 어드벤처 투어'
+    en: 'Mongolia Travel & Tours - Visit Mongolia with Mongol Trail | Local Expert Guides',
+    mn: 'Монгол аялал - Mongol Trail | Орон нутгийн мэргэжлийн хөтөч',
+    ko: '몽골 여행 및 투어 - Mongol Trail과 함께 몽골 방문'
+  };
+
+  const descriptions = {
+    en: 'Discover authentic Mongolia travel experiences with Mongol Trail. Expert local guides, custom tours to the Gobi Desert, Altai Mountains & more. 100% locally-owned tour operator.',
+    mn: 'Монголын аяллаар бидэнтэй хамт. Орон нутгийн туршлагатай хөтөч, Говь, Алтай, Орхон хөндийн аяллууд.',
+    ko: 'Mongol Trail과 함께 진정한 몽골 여행을 경험하세요. 현지 전문 가이드, 고비 사막, 알타이 산맥 맞춤 투어.'
   };
 
   const baseUrl = 'https://www.mongoltrail.com';
   return {
     title: titles[params.lang] || titles.en,
-    description: dict.featured.desc,
+    description: descriptions[params.lang] || descriptions.en,
+    keywords: [
+      'Mongolia travel',
+      'Mongolia tours',
+      'visit Mongolia',
+      'Gobi Desert tours',
+      'Mongolia tour operator',
+      'Altai Mountains',
+      'Orkhon Valley',
+      'Mongolia visa',
+      'best time to visit Mongolia',
+      'Mongolia travel guide'
+    ],
     alternates: {
       canonical: `${baseUrl}/${params.lang}`,
       languages: {
         'mn': `${baseUrl}/mn`,
         'en': `${baseUrl}/en`,
         'ko': `${baseUrl}/ko`,
-        'x-default': `${baseUrl}/mn`,
+        'x-default': `${baseUrl}/en`,
       }
+    },
+    openGraph: {
+      title: titles[params.lang] || titles.en,
+      description: descriptions[params.lang] || descriptions.en,
+      type: 'website',
+      locale: params.lang === 'mn' ? 'mn_MN' : params.lang === 'ko' ? 'ko_KR' : 'en_US',
+      url: `${baseUrl}/${params.lang}`,
+      siteName: 'Mongol Trail'
     }
-
   };
 }
 
@@ -54,7 +81,7 @@ export default async function Home(props: { params: Promise<{ lang: Locale }> })
             'https://www.facebook.com/mongoltrail',
             'https://www.instagram.com/mongoltrail'
           ],
-          priceRange: '$$$',
+          priceRange: '$$-$$$',
           address: {
             '@type': 'PostalAddress',
             addressLocality: 'Ulaanbaatar',
@@ -64,9 +91,10 @@ export default async function Home(props: { params: Promise<{ lang: Locale }> })
             '@type': 'ContactPoint',
             telephone: '+976-99123456',
             contactType: 'customer service',
-            areaServed: ['US', 'DE', 'KR'],
-            availableLanguage: ['en', 'mn', 'ko', 'de']
-          }
+            areaServed: 'MN',
+            availableLanguage: ['en', 'mn', 'de']
+          },
+          description: 'Mongol Trail is Mongolia\'s premier local tour operator offering authentic, sustainable Mongolia tours and custom travel experiences. Expert local guides, flexible itineraries, and responsible tourism.'
         }}
       />
 
@@ -84,38 +112,49 @@ export default async function Home(props: { params: Promise<{ lang: Locale }> })
         }}
       />
 
-      {/* FAQ Schema */}
+      {/* TouristDestination Schema */}
       <StructuredData
-        type="FAQPage"
+        type="TouristDestination"
         data={{
-          mainEntity: [
+          '@id': 'https://www.mongoltrail.com/#mongolia',
+          name: 'Mongolia',
+          description: 'Discover Mongolia\'s legendary landscapes, from the Gobi Desert to the Altai Mountains, with expert local guides from Mongol Trail.',
+          touristType: ['Adventure Traveler', 'Cultural Explorer', 'Luxury Tourist'],
+          includesAttraction: [
             {
-              '@type': 'Question',
-              name: 'What is the best time to visit Mongolia?',
-              acceptedAnswer: {
-                '@type': 'Answer',
-                text: 'The best time to visit Mongolia is from June to August for warm weather and festivals like Naadam. For winter adventure lovers, February is great for the Ice Festival.'
-              }
+              '@type': 'TouristAttraction',
+              name: 'Gobi Desert',
+              description: 'Mongolia\'s legendary southern desert featuring singing sand dunes, flaming cliffs, and unique wildlife.'
             },
             {
-              '@type': 'Question',
-              name: 'Do I need a visa for Mongolia?',
-              acceptedAnswer: {
-                '@type': 'Answer',
-                text: 'Many countries, including South Korea and several European nations, have visa-free access to Mongolia for tourism. Check the latest regulations or contact us for assistance.'
-              }
+              '@type': 'TouristAttraction',
+              name: 'Altai Mountains',
+              description: 'Majestic mountain range in western Mongolia, home to eagle hunters and pristine alpine landscapes.'
             },
             {
-              '@type': 'Question',
-              name: 'Are Mongol Trail tours suitable for families?',
-              acceptedAnswer: {
-                '@type': 'Answer',
-                text: 'Yes! We offer specialized family packages with kid-friendly activities, comfortable transport, and flexible itineraries.'
-              }
+              '@type': 'TouristAttraction',
+              name: 'Orkhon Valley',
+              description: 'UNESCO World Heritage Site and historical heart of the Mongol Empire, featuring ancient capitals and monasteries.'
             }
           ]
         }}
       />
+
+      {/* FAQ Schema - Enhanced with all questions */}
+      <StructuredData
+        type="FAQPage"
+        data={{
+          mainEntity: (dict as any).faq?.questions?.map((q: any) => ({
+            '@type': 'Question',
+            name: q.question,
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: q.answer
+            }
+          })) || []
+        }}
+      />
+
       {/* Load Hero independently */}
       <Suspense fallback={<div className="h-screen w-full bg-slate-900 animate-pulse" />}>
         <HeroWrapper lang={params.lang} />
@@ -127,7 +166,14 @@ export default async function Home(props: { params: Promise<{ lang: Locale }> })
       </Suspense>
 
       <WhyChooseUs dictionary={dict.whyChooseUs} />
+
+      {/* Top Destinations Section */}
+      {(dict as any).topDestinations && <TopDestinations dictionary={(dict as any).topDestinations} />}
+
       <TripReviews />
+
+      {/* FAQ Section */}
+      {(dict as any).faq && <FAQ dictionary={(dict as any).faq} />}
     </>
   );
 }

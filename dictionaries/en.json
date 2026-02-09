@@ -21,7 +21,7 @@
         "titleMain": "Make your dream",
         "titleAccent": "trip",
         "titleEnd": "a reality.",
-        "desc": "Travel is an investment. Not in material things — but in yourself, your soul, your perspective, and the quality of your life.",
+        "desc": "Travel is an investment. Not in material things \u2014 but in yourself, your soul, your perspective, and the quality of your life.",
         "viewAll": "View All Trips"
     },
     "footer": {
@@ -33,7 +33,7 @@
         "trendingTitle": "Trending",
         "contactTitle": "Contact Us",
         "address": "Room 502, 5th Floor, Erkhi Center, West 4 Road, Ulaanbaatar",
-        "copyright": "© 2025 Mongol Trail. All rights reserved.",
+        "copyright": "\u00a9 2025 Mongol Trail. All rights reserved.",
         "policy": "Privacy Policy",
         "terms": "Terms of Service",
         "europe": "Europe",
@@ -129,5 +129,80 @@
             "emailPlaceholder": "Email Address"
         },
         "submit": "Dispatch Inquiry"
+    },
+    "topDestinations": {
+        "badge": "Iconic Landscapes",
+        "title": "Explore Mongolia's Most Iconic Destinations",
+        "subtitle": "From the legendary Gobi Desert to the majestic Altai Mountains, discover the landscapes that define Mongolia.",
+        "bestTimeLabel": "Best Time:",
+        "perfectForLabel": "Perfect For:",
+        "exploreLink": "Explore Tours",
+        "gobi": {
+            "title": "Gobi Desert \u2013 The Legendary Southern Frontier",
+            "description": "The Gobi Desert is Mongolia's crown jewel\u2014a vast wilderness of singing sand dunes, dramatic canyons, and rare wildlife. Visit the towering Khongoryn Els dunes, explore the flaming cliffs of Bayanzag where dinosaur fossils were first discovered, and meet Bactrian camels in their native habitat.",
+            "bestTime": "May to September",
+            "perfectFor": "Desert adventures, paleontology enthusiasts, photographers"
+        },
+        "altai": {
+            "title": "Altai Mountains \u2013 Mongolia's Majestic Western Peaks",
+            "description": "In the remote west, the Altai Mountains rise like ancient sentinels. This UNESCO-recognized region is home to Kazakh eagle hunters, glacial lakes, and peaks exceeding 4,000 meters. Trek through alpine meadows, witness golden eagle festivals, and immerse yourself in the traditions of Mongolia's ethnic minorities.",
+            "bestTime": "June to September",
+            "perfectFor": "Trekking, cultural immersion, wildlife viewing"
+        },
+        "orkhon": {
+            "title": "Orkhon Valley \u2013 The Heart of Mongolian History",
+            "description": "A UNESCO World Heritage Site, the Orkhon Valley is where Genghis Khan built his empire. Explore Karakorum, the ancient Mongol capital, visit Erdene Zuu Monastery (Mongolia's oldest Buddhist temple), and ride horses across volcanic landscapes dotted with hot springs and waterfalls.",
+            "bestTime": "May to October",
+            "perfectFor": "History buffs, horseback riding, cultural tours"
+        }
+    },
+    "faq": {
+        "badge": "FAQ",
+        "title": "Everything You Need to Know About Traveling to Mongolia",
+        "subtitle": "Get answers to the most common questions about visiting Mongolia with Mongol Trail.",
+        "stillHaveQuestions": "Still have questions?",
+        "contactUs": "Contact Our Team",
+        "questions": [
+            {
+                "question": "Is Mongolia safe for tourists?",
+                "answer": "Yes. Mongolia is one of the safest countries in Asia for travelers. Violent crime is rare, and Mongolians are famously hospitable. Mongol Trail's local expertise and 24/7 support ensure your safety in remote areas."
+            },
+            {
+                "question": "How much does a Mongolia tour cost?",
+                "answer": "Tour costs vary based on duration, group size, and customization. Budget tours start around $100-150 USD per day, while luxury experiences range from $300-500+ per day. Mongol Trail offers transparent pricing tailored to your budget."
+            },
+            {
+                "question": "Do I need a visa to visit Mongolia?",
+                "answer": "Most visitors from the US, EU, and many Asian countries can enter Mongolia visa-free for up to 30 days. Citizens of some countries require a visa. Mongol Trail provides complete visa guidance during booking."
+            },
+            {
+                "question": "What is the best time to visit Mongolia?",
+                "answer": "Summer (June-August) offers warm weather and Naadam Festival celebrations. Spring (May) and Autumn (September) provide mild temperatures and fewer crowds. Winter (November-March) is ideal for cultural tours and ice festivals but requires cold-weather preparation."
+            },
+            {
+                "question": "What is the best time to visit the Gobi Desert?",
+                "answer": "The Gobi Desert is best visited from May to September when temperatures are moderate (15-30\u00b0C / 59-86\u00b0F). Avoid July-August for extreme heat. Spring and autumn offer comfortable conditions and stunning light for photography."
+            },
+            {
+                "question": "How do I get to Mongolia?",
+                "answer": "Most international travelers fly into Chinggis Khaan International Airport in Ulaanbaatar, Mongolia's capital. Direct flights connect from Seoul, Beijing, Tokyo, Moscow, and Istanbul. Mongol Trail can arrange airport pickup and domestic travel."
+            },
+            {
+                "question": "Can I customize my Mongolia tour?",
+                "answer": "Absolutely. Mongol Trail specializes in custom itineraries. Whether you want a 5-day Gobi express, a 14-day trans-Mongolia expedition, or a luxury ger camp experience, we design tours around your interests, fitness level, and timeline."
+            },
+            {
+                "question": "What should I pack for Mongolia?",
+                "answer": "Essentials include layered clothing (temperatures fluctuate dramatically), sturdy hiking boots, sun protection, and personal medications. For summer, pack light layers and rain gear. Winter travelers need extreme cold-weather gear. Mongol Trail provides detailed packing lists upon booking."
+            },
+            {
+                "question": "What languages are spoken in Mongolia?",
+                "answer": "Mongolian is the official language. In Ulaanbaatar and tourist areas, English is increasingly common. Mongol Trail guides are fluent in English and German, ensuring clear communication throughout your journey."
+            },
+            {
+                "question": "What is a ger (yurt)?",
+                "answer": "A ger (also called a yurt) is the traditional portable dwelling of Mongolian nomads. Made of felt and wood, gers are surprisingly comfortable, insulated, and culturally significant. Most Mongol Trail tours include authentic ger stays with nomadic families or in comfortable tourist ger camps."
+            }
+        ]
     }
 }

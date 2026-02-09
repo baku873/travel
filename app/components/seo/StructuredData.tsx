@@ -1,6 +1,6 @@
 import Script from 'next/script';
 
-type SchemaType = 'Organization' | 'WebSite' | 'Product' | 'TouristTrip' | 'BreadcrumbList' | 'FAQPage' | 'TravelAgency';
+type SchemaType = 'Organization' | 'WebSite' | 'Product' | 'TouristTrip' | 'BreadcrumbList' | 'FAQPage' | 'TravelAgency' | 'TouristDestination';
 
 interface StructuredDataProps {
     id?: string;
