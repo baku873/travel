@@ -625,8 +625,8 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6 bg-slate-50 p-6 rounded-2xl border border-slate-200">
                   <div className="col-span-1">
                     <label className="block text-xs font-black uppercase text-slate-400 tracking-widest mb-3">{activeAdminLang === 'mn' ? 'Нүүр зураг' : 'Cover Image'}</label>
-                    <div onClick={() => fileInputRef.current?.click()} className="border-2 border-dashed h-40 rounded-xl flex items-center justify-center cursor-pointer hover:bg-white hover:border-blue-400 transition-all relative overflow-hidden bg-white shadow-sm">
-                      {uploadingImage ? <FaSpinner className="animate-spin text-2xl text-blue-500" /> : formData.image ? <img src={formData.image} className="w-full h-full object-cover" /> : <div className="text-slate-400 text-center"><FaCloudUploadAlt className="text-3xl mx-auto mb-1" /><p className="text-[10px] font-bold uppercase">{activeAdminLang === 'mn' ? 'Зураг хуулах' : 'Main Photo'}</p></div>}
+                    <div onClick={() => fileInputRef.current?.click()} className="border-2 border-dashed h-40 rounded-xl flex items-center justify-center cursor-pointer hover:bg-white hover:border-blue-400 transition-all relative overflow-hidden bg-slate-50 shadow-sm">
+                      {uploadingImage ? <FaSpinner className="animate-spin text-2xl text-blue-500" /> : formData.image ? <img src={formData.image} className="w-full h-full object-contain" /> : <div className="text-slate-400 text-center"><FaCloudUploadAlt className="text-3xl mx-auto mb-1" /><p className="text-[10px] font-bold uppercase">{activeAdminLang === 'mn' ? 'Зураг хуулах' : 'Main Photo'}</p></div>}
                       <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleImageUpload} />
                     </div>
                   </div>
@@ -879,8 +879,8 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
                             <div className="mt-4">
                               <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">{activeAdminLang === 'mn' ? 'Зураг (Заавал биш)' : 'Upload Image (Optional)'}</label>
                               {item.imageUrl ? (
-                                <div className="relative w-full max-w-sm h-32 rounded-lg border border-slate-200 overflow-hidden group">
-                                  <img src={item.imageUrl} alt="Day preview" className="w-full h-full object-cover" />
+                                <div className="relative w-full max-w-sm h-32 rounded-lg border border-slate-200 overflow-hidden group bg-slate-50">
+                                  <img src={item.imageUrl} alt="Day preview" className="w-full h-full object-contain" />
                                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                     <button
                                       type="button"

@@ -14,6 +14,7 @@ import { AppInitializer } from '../components/AppInitializer';
 import { MobileWrapper } from '../components/MobileWrapper';
 import { ExternalLinkHandler } from '../components/ExternalLinkHandler';
 import { MobileLayout } from '../components/MobileLayout';
+import TravelAgencySchema from '../components/seo/TravelAgencySchema';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -124,30 +125,8 @@ export default async function RootLayout(props: {
           <link rel="preconnect" href="https://api.dicebear.com" />
           <link rel="preconnect" href="https://touching-gobbler-96.clerk.accounts.dev" />
           <link rel="preconnect" href="https://www.transparenttextures.com" />
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify({
-                '@context': 'https://schema.org',
-                '@type': 'Organization',
-                name: 'Mongol Trail',
-                url: 'https://www.mongoltrail.com',
-                logo: 'https://www.mongoltrail.com/logo.jpg',
-                sameAs: [
-                  'https://www.facebook.com/mongoltrail',
-                  'https://www.instagram.com/mongoltrail',
-                  'https://x.com/mongoltrail'
-                ],
-                contactPoint: {
-                  '@type': 'ContactPoint',
-                  telephone: '+976-99123456',
-                  contactType: 'customer service',
-                  areaServed: ['US', 'KR', 'MN', 'DE', 'FR'],
-                  availableLanguage: ['en', 'mn', 'ko']
-                }
-              })
-            }}
-          />
+          {/* SEO Schema */}
+          <TravelAgencySchema />
         </head>
         <body className={inter.className}>
           <SafeAreaProvider>

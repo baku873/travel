@@ -11,7 +11,7 @@ import { useLanguage } from "../../context/LanguageContext";
 const SignInPage = () => {
   // 👇 2. Get Language
   const { language } = useLanguage();
-  
+
   const { isLoaded, signIn, setActive } = useSignIn();
   const { user, isLoaded: userLoaded } = useUser();
   const router = useRouter();
@@ -118,7 +118,7 @@ const SignInPage = () => {
     try {
       await signIn.authenticateWithRedirect({
         strategy,
-        redirectUrl: "/sso-callback",
+        redirectUrl: `/${language}/sso-callback`,
         redirectUrlComplete: "/",
       });
     } catch (err: any) {
@@ -135,14 +135,14 @@ const SignInPage = () => {
       {/* Background Video Layer */}
       <div className="absolute inset-0 z-0">
         <video autoPlay loop muted playsInline className="w-full h-full object-cover filter brightness-50">
-          <source src="/hero.mp4" type="video/mp4" />
+          <source src="https://res.cloudinary.com/dc127wztz/video/upload/hero_uzq5wr.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-black/50" />
       </div>
-      
+
       {/* Main Content Layout */}
       <div className="relative z-10 container mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-        
+
         {/* Left Column: Hero Text */}
         <motion.div
           initial={{ opacity: 0, x: -50 }}
@@ -177,7 +177,7 @@ const SignInPage = () => {
             <p className="text-slate-400 mb-8">
               {t.formDesc}
             </p>
-            
+
             {/* Social Logins */}
             <div className="flex flex-col sm:flex-row gap-4 mb-8">
               <SocialButton
@@ -193,7 +193,7 @@ const SignInPage = () => {
                 disabled={isLoading}
               />
             </div>
-            
+
             <div className="flex items-center gap-4 mb-8">
               <hr className="flex-1 border-slate-700" />
               <span className="text-slate-500 text-xs font-bold">{t.divider}</span>
@@ -230,7 +230,7 @@ const SignInPage = () => {
                 )}
               </motion.button>
             </form>
-            
+
             <p className="text-center text-sm text-slate-400 mt-8">
               {t.noAccount}{" "}
               <Link href="/sign-up" className="font-bold text-sky-400 hover:underline">

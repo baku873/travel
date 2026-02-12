@@ -25,7 +25,7 @@ const SignUpPage = () => {
       await fetch("/api/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({}), 
+        body: JSON.stringify({}),
       });
     } catch (err) {
       console.error("DB Sync Error:", err);
@@ -107,7 +107,7 @@ const SignUpPage = () => {
     if (!isLoaded) return;
     setIsLoading(true);
     setError("");
-    
+
     try {
       await signUp.create({ emailAddress: email, password });
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
@@ -124,14 +124,14 @@ const SignUpPage = () => {
     e.preventDefault();
     if (!isLoaded) return;
     setIsLoading(true);
-    
+
     try {
       const completeSignUp = await signUp.attemptEmailAddressVerification({ code });
-      
+
       if (completeSignUp.status === "complete") {
         // A. Set Session (Logs them in)
         await setActive({ session: completeSignUp.createdSessionId });
-        
+
         // B. Sync to MongoDB (Fire and forget, or await if critical)
         await syncUserToDB();
 
@@ -154,7 +154,7 @@ const SignUpPage = () => {
     try {
       await signUp.authenticateWithRedirect({
         strategy,
-        redirectUrl: "/sso-callback", 
+        redirectUrl: `/${language}/sso-callback`,
         redirectUrlComplete: "/",
       });
     } catch (err: any) {
@@ -200,13 +200,13 @@ const SignUpPage = () => {
     <section className="relative min-h-screen w-full flex items-center justify-center bg-slate-900 overflow-hidden">
       <div className="absolute inset-0 z-0">
         <video autoPlay loop muted playsInline className="w-full h-full object-cover filter brightness-50">
-          <source src="/hero.mp4" type="video/mp4" />
+          <source src="https://res.cloudinary.com/dc127wztz/video/upload/hero_uzq5wr.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-black/50" />
       </div>
-      
+
       <div className="relative z-10 container mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-        
+
         {/* Left Column */}
         <motion.div
           initial={{ opacity: 0, x: -50 }}
@@ -229,12 +229,12 @@ const SignUpPage = () => {
           <div className="bg-white/10 backdrop-blur-2xl border border-white/10 rounded-3xl p-8 md:p-12 shadow-2xl">
             <h2 className="text-3xl font-bold text-white mb-2">{t.formTitle}</h2>
             <p className="text-slate-400 mb-8">{t.formDesc}</p>
-            
+
             <div className="flex flex-col sm:flex-row gap-4 mb-8">
               <SocialButton icon={FaGoogle} text={t.socialGoogle} onClick={() => handleSocialSignUp("oauth_google")} disabled={isLoading} />
               <SocialButton icon={FaFacebookF} text={t.socialFacebook} onClick={() => handleSocialSignUp("oauth_facebook")} disabled={isLoading} />
             </div>
-            
+
             <div className="flex items-center gap-4 mb-8">
               <hr className="flex-1 border-slate-700" />
               <span className="text-slate-500 text-xs font-bold">{t.divider}</span>
@@ -256,7 +256,7 @@ const SignUpPage = () => {
                 {!isLoading && <FaArrowRight className="ml-2 transition-transform group-hover:translate-x-1" />}
               </motion.button>
             </form>
-            
+
             <p className="text-center text-sm text-slate-400 mt-8">
               {t.hasAccount} <Link href="/sign-in" className="font-bold text-sky-400 hover:underline">{t.signIn}</Link>
             </p>

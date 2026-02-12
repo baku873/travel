@@ -30,12 +30,18 @@ const isPublicRoute = createRouteMatcher([
     '/(mn|en|ko)/contact(.*)',
     '/(mn|en|ko)/faq(.*)',
     '/(mn|en|ko)/tours/(.*)',
+    '/sign-in(.*)',
+    '/sign-up(.*)',
+    '/sso-callback(.*)',
+    '/(mn|en|ko)/sign-in(.*)',
+    '/(mn|en|ko)/sign-up(.*)',
+    '/(mn|en|ko)/sso-callback(.*)',
     '/sitemap.xml',
     '/robots.txt'
 ]);
 
 export default clerkMiddleware(async (auth, request) => {
-    const { pathname } = request.nextUrl;
+    const { pathname, search } = request.nextUrl;
 
     // 1. Skip if it's an API route, has a locale, or is a public file
     if (pathname.startsWith('/api')) return;
@@ -48,10 +54,10 @@ export default clerkMiddleware(async (auth, request) => {
         // 2. Optimized locale detection
         const locale = getLocale(request);
 
-        // 3. Redirect to the localized path
+        // 3. Redirect to the localized path, PRESERVING QUERY PARAMS
         return NextResponse.redirect(
             new URL(
-                `/${locale}${pathname === '/' ? '' : pathname}`,
+                `/${locale}${pathname === '/' ? '' : pathname}${search}`,
                 request.url
             )
         );

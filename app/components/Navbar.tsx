@@ -84,9 +84,14 @@ const Navbar: React.FC<{ dictionary: any }> = ({ dictionary }) => {
               </SignedIn>
 
               <SignedOut>
-                <Link href="/sign-in" className="text-slate-600 hover:text-sky-500 transition-colors">
-                  <User size={20} strokeWidth={1.5} />
-                </Link>
+                <div className="flex items-center gap-4">
+                  <Link href={`/${language}/sign-in`} className="text-slate-600 hover:text-sky-500 transition-colors font-bold text-sm">
+                    Log In
+                  </Link>
+                  <Link href={`/${language}/sign-up`} className="bg-sky-500 text-white px-4 py-2 rounded-full text-xs font-bold hover:bg-sky-600 transition-colors shadow-sm shadow-sky-200">
+                    Sign Up
+                  </Link>
+                </div>
               </SignedOut>
             </div>
 
