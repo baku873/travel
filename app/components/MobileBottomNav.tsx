@@ -19,8 +19,8 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ language, dictionary 
   const pathname = usePathname();
   const t = dictionary || {};
   const { isSignedIn, user } = useUser();
-  const wishlistCount = Array.isArray(user?.publicMetadata?.wishlist) 
-    ? (user?.publicMetadata?.wishlist as string[]).length 
+  const wishlistCount = Array.isArray(user?.publicMetadata?.wishlist)
+    ? (user?.publicMetadata?.wishlist as string[]).length
     : 0;
 
   const tabs = useMemo(() => [
@@ -34,7 +34,7 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ language, dictionary 
   const activeIndex = tabs.findIndex(tab =>
     pathname === tab.href || (tab.id === 'home' && pathname === `/${language}`)
   );
-  
+
   const activeTabId = activeIndex !== -1 ? tabs[activeIndex].id : null;
 
   return (
@@ -55,23 +55,23 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ language, dictionary 
             // 1. If it's the Profile tab and user is Signed In -> Show Clerk UserButton
             if (tab.id === 'profile' && isSignedIn) {
               return (
-                <div key={tab.id} className="relative flex flex-col items-center gap-1 p-2 min-w-[44px] min-h-[44px] justify-center">
+                <div key={tab.id} className="relative flex flex-col items-center gap-1 p-2 min-w-[44px] min-h-[44px] justify-center" aria-label="Profile" role="button">
                   <div className={`p-0.5 rounded-full border-2 ${isActive ? 'border-blue-500' : 'border-transparent'}`}>
-                     <UserButton 
-                        afterSignOutUrl={`/`} 
-                        appearance={{ 
-                          elements: { 
-                            avatarBox: "w-7 h-7 mx-auto",
-                            userButtonPopoverCard: "w-[calc(100vw-32px)] max-w-[360px] mx-auto font-[var(--font-inter)]",
-                            userButtonPopoverActionButton: "text-blue-600 hover:text-blue-700",
-                            userButtonPopoverActionButtonIcon: "text-blue-600"
-                          },
-                          variables: {
-                            colorPrimary: '#2563eb',
-                            fontFamily: 'var(--font-inter)'
-                          }
-                        }} 
-                     />
+                    <UserButton
+                      afterSignOutUrl={`/`}
+                      appearance={{
+                        elements: {
+                          avatarBox: "w-7 h-7 mx-auto",
+                          userButtonPopoverCard: "w-[calc(100vw-32px)] max-w-[360px] mx-auto font-[var(--font-inter)]",
+                          userButtonPopoverActionButton: "text-blue-600 hover:text-blue-700",
+                          userButtonPopoverActionButtonIcon: "text-blue-600"
+                        },
+                        variables: {
+                          colorPrimary: '#2563eb',
+                          fontFamily: 'var(--font-inter)'
+                        }
+                      }}
+                    />
                   </div>
                   {isActive && (
                     <motion.div
@@ -97,16 +97,15 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ language, dictionary 
                     whileTap={{ scale: 0.9 }}
                     animate={isActive ? { scale: 1.2, y: -2 } : { scale: 1, y: 0 }}
                     transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                    className={`relative z-10 p-1 transition-colors duration-300 ${
-                      isActive ? "text-blue-600 drop-shadow-[0_0_12px_rgba(37,99,235,0.4)]" : "text-slate-400 group-hover:text-slate-600"
-                    }`}
+                    className={`relative z-10 p-1 transition-colors duration-300 ${isActive ? "text-blue-600 drop-shadow-[0_0_12px_rgba(37,99,235,0.4)]" : "text-slate-400 group-hover:text-slate-600"
+                      }`}
                   >
                     <Icon size={28} strokeWidth={isActive ? 2.5 : 1.5} />
                   </motion.div>
-                  
+
                   {/* Badge Polish */}
                   {tab.id === "wishlist" && wishlistCount > 0 && (
-                    <motion.span 
+                    <motion.span
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                       key={wishlistCount} // Trigger animation on count change

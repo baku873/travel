@@ -40,6 +40,15 @@ const Hero = ({ trips, lang, dictionary }: { trips: Trip[], lang: "mn" | "en" | 
   const { t: translate } = useLanguage();
   const [slideIndex, setSlideIndex] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile for performance optimizations
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Define slides with localization
   const slides = useMemo(() => [
@@ -145,6 +154,8 @@ const Hero = ({ trips, lang, dictionary }: { trips: Trip[], lang: "mn" | "en" | 
   const y = useTransform(springY, [0, 1], ["2%", "-2%"]);
 
   useEffect(() => {
+    // Skip parallax on mobile — no mouse events on touch devices
+    if (isMobile) return;
     const handleMouseMove = (e: MouseEvent) => {
       // Normalize to 0-1
       mouseX.set(e.clientX / window.innerWidth);
@@ -153,7 +164,7 @@ const Hero = ({ trips, lang, dictionary }: { trips: Trip[], lang: "mn" | "en" | 
 
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, [mouseX, mouseY]);
+  }, [mouseX, mouseY, isMobile]);
 
   const t = useCallback((obj: any) => {
     if (!obj) return "";
@@ -188,7 +199,7 @@ const Hero = ({ trips, lang, dictionary }: { trips: Trip[], lang: "mn" | "en" | 
       {/* ─── 1. Background Video with Fallback Image ─── */}
       <motion.div
         className="absolute inset-0 z-0"
-        style={{ x, y, scale: 1.1 }} // Scale up slightly to prevent edges showing during parallax
+        style={isMobile ? { scale: 1.05 } : { x, y, scale: 1.1 }}
       >
         <video
           ref={videoRef}
@@ -196,25 +207,23 @@ const Hero = ({ trips, lang, dictionary }: { trips: Trip[], lang: "mn" | "en" | 
           loop
           muted
           playsInline
-          preload="metadata"
-          poster="https://res.cloudinary.com/dc127wztz/image/upload/f_auto,q_auto,w_1920/v1770961573/hero-poster_c2nbaw.png"
+          preload={isMobile ? "none" : "metadata"}
+          poster={isMobile
+            ? "https://res.cloudinary.com/dc127wztz/image/upload/f_auto,q_auto,w_800/v1770961573/hero-poster_c2nbaw.png"
+            : "https://res.cloudinary.com/dc127wztz/image/upload/f_auto,q_auto,w_1920/v1770961573/hero-poster_c2nbaw.png"
+          }
           className="w-full h-full object-cover opacity-100"
-          onError={(e) => {
-            // Fallback to image if video fails to load
-            const videoElement = e.target as HTMLVideoElement;
-            videoElement.style.display = 'none';
-            const fallbackImage = document.querySelector('.video-fallback-image') as HTMLElement;
-            if (fallbackImage) {
-              fallbackImage.style.display = 'block';
-            }
-          }}
         >
           <source src="https://res.cloudinary.com/dc127wztz/video/upload/v1769511944/hero_uzq5wr.mp4" type="video/mp4" />
+          <track kind="captions" label="No captions" />
         </video>
         {/* LCP Optimization: Visible prioritized image behind video */}
         <div className="absolute inset-0 -z-20">
           <Image
-            src="https://res.cloudinary.com/dc127wztz/image/upload/f_auto,q_auto,w_1920/v1770961573/hero-poster_c2nbaw.png"
+            src={isMobile
+              ? "https://res.cloudinary.com/dc127wztz/image/upload/f_auto,q_auto,w_800/v1770961573/hero-poster_c2nbaw.png"
+              : "https://res.cloudinary.com/dc127wztz/image/upload/f_auto,q_auto,w_1920/v1770961573/hero-poster_c2nbaw.png"
+            }
             alt="Mongolia Landscape"
             fill
             priority

@@ -232,7 +232,7 @@ const Navbar: React.FC<{ dictionary: any }> = ({ dictionary }) => {
 
       {/* MOBILE HEADER (Just Logo & Profile/Search maybe? - Keeping it minimal as requested) */}
       <div className="md:hidden fixed top-0 inset-x-0 z-[var(--z-navbar)] pt-10 px-4 pb-4 flex justify-between items-center bg-gradient-to-b from-white/90 to-transparent">
-        <Link href={`/${language}`} className="flex items-center gap-2">
+        <Link href={`/${language}`} className="flex items-center gap-2" aria-label="Mongol Trail Home">
           <div
             className="rounded-full bg-white shadow-md p-0.5 overflow-hidden shrink-0"
             style={{ width: 36, height: 36 }}
