@@ -26,7 +26,7 @@ export const content = {
       de: "Über uns"
     },
     introText1: {
-      en: "Our organization is a professional team aiming to organize your trip most",
+      en: "Our organization is a professional team aiming to organize your Mongolian travel experience most",
       mn: "Манай байгууллага таны аяллыг хамгийн",
       ko: "저희는 고객님의 여행을 가장",
       de: "Unser Unternehmen ist ein professionelles Team, das darauf abzielt, Ihre Reise am"
@@ -38,7 +38,7 @@ export const content = {
       de: "bequemsten, sichersten und ehrlichsten"
     },
     introText2: {
-      en: "We are experienced in international travel, visa services, and travel consulting.",
+      en: "We are experienced in international routes, Mongol travel, visa services, and travel consulting.",
       mn: "зохион байгуулахыг зорьдог мэргэжлийн баг юм.",
       ko: "계획하는 것을 목표로 하는 전문 팀입니다.",
       de: "zu organisieren. Wir sind erfahren in internationalen Reisen, Visadienstleistungen und Reiseberatung."
@@ -295,7 +295,7 @@ export const content = {
       de: "Erlebe das Außergewöhnliche"
     },
     desc: {
-      en: "We don't just plan trips; we craft unforgettable memories. Here is why thousands of travelers trust us with their adventures.",
+      en: "We don't just plan trips; we craft unforgettable Mongolian travel memories. Here is why thousands of travelers trust us with their Mongol travel adventures.",
       mn: "Бид зөвхөн аялал төлөвлөдөггүй, мартагдашгүй дурсамжийг бүтээдэг. Мянга мянган аялагчид яагаад бидэнд итгэдгийг эндээс хараарай.",
       ko: "우리는 단순한 여행 계획이 아닌, 잊지 못할 추억을 만듭니다. 수천 명의 여행자가 우리를 신뢰하는 이유입니다.",
       de: "Wir planen nicht nur Reisen, wir schaffen unvergessliche Erinnerungen. Hier ist, warum tausende Reisende uns ihre Abenteuer anvertrauen."
@@ -613,7 +613,7 @@ export const content = {
       de: "E-Mail-Adresse..."
     },
     brandDesc: {
-      en: "We offer you the most pleasant, safe, and unforgettable journeys to every corner of the world.",
+      en: "We offer you the most pleasant, safe, and unforgettable Mongol travel experiences and journeys to every corner of the world.",
       mn: "Бид танд дэлхийн өнцөг булан бүрт хамгийн таатай, аюулгүй, мартагдашгүй аялалыг санал болгож байна.",
       ko: "우리는 전 세계 구석구석으로 가장 즐겁고 안전하며 잊지 못할 여행을 제공합니다.",
       de: "Wir bieten Ihnen die angenehmsten, sichersten und unvergesslichsten Reisen in jeden Winkel der Welt."
@@ -669,7 +669,7 @@ export const content = {
       de: "über uns?"
     },
     desc: {
-      en: "Thousands of travelers choose Mongolia Trails Agency to explore the world and create unforgettable memories.",
+      en: "Thousands of travelers choose Mongol Trail to explore the world and create unforgettable Mongolian travel memories.",
       mn: "Мянга мянган аялагчид дэлхий ертөнцтэй танилцаж, мартагдашгүй дурсамжийг бүтээхийн тулд Mongolia Trails Agency-г сонгодог.",
       ko: "수천 명의 여행자가 몽골 트레일 에이전시를 선택하여 세상을 탐험하고 잊지 못할 추억을 만듭니다.",
       de: "Tausende von Reisenden wählen Mongolia Trails Agency, um die Welt zu erkunden und unvergessliche Erinnerungen zu schaffen."
