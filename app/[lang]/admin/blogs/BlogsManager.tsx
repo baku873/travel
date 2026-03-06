@@ -63,7 +63,7 @@ export default function BlogsManager({ initialPosts }: { initialPosts: Post[] })
     setUploadingImage(true);
     const data = new FormData();
     data.append("file", file);
-    data.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_PRESET!);
+    data.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_PRESET || "euro_trails");
     data.append("cloud_name", process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "dxoxdiuwr");
 
     try {
