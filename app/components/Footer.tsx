@@ -193,7 +193,7 @@ const Footer: React.FC<{ dictionary: any, navDictionary: any }> = ({ dictionary,
               </li>
               <li className="flex items-center gap-3 text-slate-400 text-sm font-[var(--font-inter)] font-light">
                 <FaEnvelope className="text-sky-500 flex-shrink-0" />
-                <span>Eurotrails1@gmail.com</span>
+                <span>info@mongoltrail.com</span>
               </li>
             </ul>
           </div>

@@ -51,7 +51,7 @@ const ContactClient = () => {
 
                 infoPhone: "+976 7766-1626",
 
-                infoEmail: "Eurotrails1@gmail.com",
+                infoEmail: "info@mongoltrail.com",
 
     
 
@@ -151,7 +151,7 @@ const ContactClient = () => {
 
                 infoPhone: "+976 7766-1626",
 
-                infoEmail: "Eurotrails1@gmail.com",
+                infoEmail: "info@mongoltrail.com",
 
     
 
@@ -251,7 +251,7 @@ const ContactClient = () => {
 
                 infoPhone: "+976 7766-1626",
 
-                infoEmail: "Eurotrails1@gmail.com",
+                infoEmail: "info@mongoltrail.com",
 
     
 
@@ -351,7 +351,7 @@ const ContactClient = () => {
 
                 infoPhone: "+976 7766-1626",
 
-                infoEmail: "Eurotrails1@gmail.com",
+                infoEmail: "info@mongoltrail.com",
 
     
 

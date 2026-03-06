@@ -224,7 +224,7 @@ const Hero = ({ trips, lang, dictionary }: { trips: Trip[], lang: "mn" | "en" | 
               ? "https://res.cloudinary.com/dc127wztz/image/upload/f_auto,q_auto,w_800/v1770961573/hero-poster_c2nbaw.png"
               : "https://res.cloudinary.com/dc127wztz/image/upload/f_auto,q_auto,w_1920/v1770961573/hero-poster_c2nbaw.png"
             }
-            alt="Mongolia Landscape"
+            alt="Tourists enjoying a Mongol travel experience in the Mongolian steppe"
             fill
             priority
             fetchPriority="high"
@@ -248,7 +248,7 @@ const Hero = ({ trips, lang, dictionary }: { trips: Trip[], lang: "mn" | "en" | 
       <div className="relative z-10 container mx-auto px-6 md:pl-12 max-w-screen-2xl w-full flex flex-col justify-center h-full">
         {/* SEO: Static H1 for search engines */}
         <h1 className="sr-only">
-          TRAVEL PROGRAM OF MONGOLIA
+          Mongolia Travel & Tours | Mongol Trail Expeditions
         </h1>
 
         {/* Top Badges (NATURE, STAR) - Restored per image */}

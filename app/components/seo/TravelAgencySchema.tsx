@@ -31,6 +31,7 @@ export default function TravelAgencySchema({
     url = 'https://www.mongoltrail.com',
     logo = 'https://www.mongoltrail.com/logo.jpg',
     telephone = '+976 7766-1626',
+    email = 'info@mongoltrail.com',
     priceRange = '$$$',
     streetAddress = 'Room 502, 5th Floor, Erkhi Center, West 4 Road',
     addressLocality = 'Ulaanbaatar',
@@ -67,6 +68,7 @@ export default function TravelAgencySchema({
         logo,
         image,
         telephone,
+        email,
         priceRange,
         address: {
             '@type': 'PostalAddress',

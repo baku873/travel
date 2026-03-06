@@ -47,7 +47,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     ? 'Албан ёсны Mongol Trail | Адал явдалт аялал'
     : lang === 'ko'
       ? '공식 Mongol Trail | 몽골 프리미엄 여행 & 트레킹'
-      : 'Official Mongol Trail | Your Gateway to Adventure';
+      : 'Mongolia Travel & Tours | The Official Mongol Trail';
 
   return {
     metadataBase: new URL(baseUrl),
@@ -55,7 +55,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       default: localizedTitle,
       template: '%s | Mongol Trail',
     },
-    description: (dict.featured as any).desc || 'Experience the ultimate adventure with Mongol Trail. Premier tours across Mongolia and the world.',
+    description: (dict.featured as any).desc || 'Looking for authentic Mongol travel experiences? Mongol Trail offers premier Mongolian travel packages, hiking trails, overland tours, and cultural trips. Book your Mongolia adventure today!',
     keywords: lang === 'mn'
       ? [
         'Монгол аялал', 'Говийн аялал', 'Хөвсгөл нуур',
@@ -89,7 +89,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       locale: lang === 'mn' ? 'mn_MN' : lang === 'ko' ? 'ko_KR' : 'en_US',
       url: `${baseUrl}/${lang}`,
       title: localizedTitle,
-      description: (dict.featured as any).desc || 'Experience the ultimate adventure with Mongol Trail.',
+      description: (dict.featured as any).desc || 'Looking for authentic Mongol travel experiences? Mongol Trail offers premier Mongolian travel packages, hiking trails, overland tours, and cultural trips. Book your Mongolia adventure today!',
       siteName: 'Mongol Trail',
       images: [
         {
@@ -103,7 +103,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     twitter: {
       card: 'summary_large_image',
       title: localizedTitle,
-      description: (dict.featured as any).desc || 'Experience the ultimate adventure with Mongol Trail.',
+      description: (dict.featured as any).desc || 'Looking for authentic Mongol travel experiences? Mongol Trail offers premier Mongolian travel packages, hiking trails, overland tours, and cultural trips. Book your Mongolia adventure today!',
       creator: '@mongoltrail',
       images: ['/logo.jpg'],
     },

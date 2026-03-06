@@ -190,6 +190,27 @@ const BlogPostClient = ({ post }: { post: BlogPost }) => {
               </div>
             )}
         </div>
+
+        {/* ────────────────── AUTHOR BIO (E-E-A-T) ────────────────── */}
+        <div className="mt-16 bg-blue-50/50 rounded-2xl p-8 border border-blue-100 flex flex-col md:flex-row items-center md:items-start gap-6">
+          <img 
+            src={post.authorImg} 
+            alt={post.author} 
+            className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md flex-shrink-0"
+          />
+          <div>
+            <h3 className="text-xl font-bold text-slate-900 mb-2">Written by {post.author}</h3>
+            <p className="text-slate-600">
+              {language === 'mn' 
+                ? 'Монгол Трэйл компанийн ахлах хөтөч, аялал жуулчлалын салбарт 10 гаруй жил ажилласан туршлагатай. Монгол орныхоо байгаль, соёлын өвийг дэлхийд таниулах зорилготой.'
+                : language === 'ko'
+                ? 'Mongol Trail의 수석 가이드로 10년 이상의 여행 업계 경험을 보유한 전문가입니다. 고비 사막과 알타이 산맥 원정을 이끄는 데 특화되어 있습니다.'
+                : language === 'de'
+                ? 'Ein erfahrener mongolischer Reiseleiter und Reisejournalist mit über 10 Jahren Erfahrung in der Leitung von Expeditionen durch die Wüste Gobi und das Altai-Gebirge.'
+                : 'An expert Mongolian tour guide and travel writer with over 10 years of experience leading expeditions across the Gobi Desert and Altai Mountains. Dedicated to sharing authentic nomadic culture with the world.'}
+            </p>
+          </div>
+        </div>
         
         {/* Footer CTA */}
         <div className="mt-16 bg-slate-50 rounded-2xl p-8 text-center border border-slate-100">

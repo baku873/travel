@@ -141,7 +141,7 @@ const Navbar: React.FC<{ dictionary: any }> = ({ dictionary }) => {
               <div className="w-full h-full rounded-full flex items-center justify-center overflow-hidden bg-white">
                 <Image
                   src="https://res.cloudinary.com/dc127wztz/image/upload/w_200,f_auto,q_auto/v1770961573/hero-poster_c2nbaw.png"
-                  alt="Mongol Trail"
+                  alt="Mongol Trail Logo"
                   width={40}
                   height={40}
                   priority
@@ -250,7 +250,7 @@ const Navbar: React.FC<{ dictionary: any }> = ({ dictionary }) => {
             className="rounded-full bg-white shadow-md p-0.5 overflow-hidden shrink-0"
             style={{ width: 36, height: 36 }}
           >
-            <Image src="https://res.cloudinary.com/dc127wztz/image/upload/w_200,f_auto,q_auto/v1770961573/hero-poster_c2nbaw.png" alt="Logo" width={36} height={36} className="object-cover w-full h-full" />
+            <Image src="https://res.cloudinary.com/dc127wztz/image/upload/w_200,f_auto,q_auto/v1770961573/hero-poster_c2nbaw.png" alt="Mongol Trail Logo" width={36} height={36} className="object-cover w-full h-full" />
           </div>
           <span className="font-black text-slate-900 text-lg tracking-tight whitespace-nowrap">MONGOL TRAIL</span>
         </Link>

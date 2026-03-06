@@ -67,7 +67,7 @@ const GoogleBusinessCard = ({ className = "", labels = defaultLabels }: GoogleBu
                 <div className="relative w-2/3 h-full overflow-hidden border-r border-white">
                     <Image
                         src="/glacier.png"
-                        alt="Mongol Trail Landscape"
+                        alt="Mongolian travel glacier tour landscape"
                         fill
                         className="object-cover hover:scale-105 transition-transform duration-500"
                     />

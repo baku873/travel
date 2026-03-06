@@ -189,7 +189,7 @@ const CustomTripForm = ({ dictionary }: { dictionary: any }) => {
             <div className="bg-gradient-to-br from-sky-600 to-sky-400 p-10 text-white relative overflow-hidden">
                 <div className="relative z-10 flex flex-col md:flex-row gap-8 items-center">
                     <div className="w-24 h-24 bg-white rounded-3xl p-3 shadow-2xl shadow-sky-900/20 rotate-3 hover:rotate-0 transition-transform duration-500">
-                        <img src="https://res.cloudinary.com/dc127wztz/image/upload/w_200,f_auto,q_auto/v1770961573/hero-poster_c2nbaw.png" alt="Logo" className="w-full h-full object-contain" />
+                        <img src="https://res.cloudinary.com/dc127wztz/image/upload/w_200,f_auto,q_auto/v1770961573/hero-poster_c2nbaw.png" alt="Mongol Trail Logo" className="w-full h-full object-contain" />
                     </div>
                     <div>
                         <h1 className="text-4xl font-black mb-3 tracking-tight">{t.header?.title || "Create Your Masterpiece"}</h1>

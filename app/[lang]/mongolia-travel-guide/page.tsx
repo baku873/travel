@@ -14,7 +14,7 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
     const { lang } = await params;
     return {
-        title: 'Ultiamte Mongolia Travel Guide 2025 | Visa, Safety, & Best Time to Visit',
+        title: 'Ultimate Mongolian Travel Guide 2025 | Mongol Trail',
         description: 'The complete Wikipedia-style guide to traveling in Mongolia. Covers Visa requirements, Gobi Desert tours, safety tips, costs, and cultural etiquette.',
         alternates: {
             canonical: `https://www.mongoltrail.com/${lang}/mongolia-travel-guide`
@@ -62,7 +62,7 @@ export default async function MongoliaTravelGuide({ params }: PageProps) {
 
                     <article className="prose prose-lg prose-slate max-w-none">
                         <p className="lead text-xl text-slate-600 mb-8">
-                            Ranking as one of the last true frontiers of adventure travel, Mongolia offers a landscape where nomadic culture thrives amidst vast steppes. This guide covers everything from <strong>Gobi Desert tours</strong> to <strong>safety tips</strong> for solo travelers.
+                            Ranking as one of the last true frontiers of adventure travel, Mongolia offers a landscape where nomadic culture thrives amidst vast steppes. Whether you are seeking authentic <strong>Mongol travel</strong> experiences, hiking pristine <strong>Mongolian trails</strong>, or embarking on overland expeditions, this guide covers everything from <strong>Gobi Desert tours</strong> to <strong>safety tips</strong> for solo travelers planning their ultimate <strong>Mongolian travel</strong> adventure.
                         </p>
 
                         {/* SECTION 1: Best Time */}
@@ -71,6 +71,8 @@ export default async function MongoliaTravelGuide({ params }: PageProps) {
                             The optimal window for visiting Mongolia is <strong>June through August</strong>. During these months, the weather is pleasant (20°C - 25°C), and the country comes alive with the <Link href={`/${lang}/tours/naadam-festival`}>Naadam Festival</Link>.
                         </p>
                         <div className="my-8 bg-blue-50 p-6 rounded-xl border border-blue-100 not-prose">
+                            <h3 className="text-lg font-bold text-blue-900 mb-2">What is the Naadam Festival?</h3>
+                            <p className="text-sm text-slate-700 mb-4">Celebrated annually from July 11-13, Naadam is Mongolia's biggest national holiday and a UNESCO Intangible Cultural Heritage event. It showcases the "Three Manly Games": Mongolian wrestling, horse racing, and archery. Attending Naadam is a must-do for any cultural <strong>Mongol travel</strong> itinerary.</p>
                             <h3 className="text-lg font-bold text-blue-900 mb-2">Quick Season Breakdown</h3>
                             <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                                 <li className="flex items-center gap-2"><span className="text-xl">☀️</span> <strong>Summer (Jun-Aug):</strong> Best for hiking, Gobi tours, and festivals.</li>
@@ -107,7 +109,22 @@ export default async function MongoliaTravelGuide({ params }: PageProps) {
                             For solo female travelers, Mongolia is safe, though hiring a guide for remote regions is recommended due to the language barrier and lack of cell service.
                         </p>
 
-                        {/* SECTION 4: Cost */}
+                        {/* SECTION 4: Gobi Desert vs. Altai Mountains */}
+                        <h2 id="gobi-vs-altai" className="scroll-mt-24 text-3xl font-bold text-slate-900 mb-6 py-4 clear-both">Gobi Desert vs. Altai Mountains: Which is better?</h2>
+                        <p>
+                            A common question for anyone planning their <strong>Mongol travel</strong> itinerary is whether to head south to the Gobi or west to the Altai Mountains.
+                        </p>
+                        <p>
+                            <strong>The Gobi Desert</strong> is famous for its vast sand dunes (Khongoryn Els), flaming cliffs (dinosaur fossils), and nomadic camel herders. It is generally more accessible from Ulaanbaatar and ideal for first-time visitors seeking classic overland tours.
+                        </p>
+                        <p>
+                            <strong>The Altai Mountains</strong>, located in the far west, offer snow-capped peaks, deep valleys, and the unique Kazakh eagle hunting culture. It is the premier destination for trekking <strong>Mongolian trails</strong>, but requires domestic flights and more rugged travel.
+                        </p>
+                        <p>
+                            If you have 10-14 days, focus on one region. If you have 3+ weeks, you can combine both for the ultimate expedition.
+                        </p>
+
+                        {/* SECTION 5: Cost */}
                         <h2 id="cost" className="scroll-mt-24 text-3xl font-bold text-slate-900 mb-6">Cost of Mongolia Travel</h2>
                         <p>
                             Mongolia fits various budgets. Budget travelers can survive on $40-60/day using local transport and hostels, while mid-range guided tours average $150-250/day including private drivers, meals, and ger camps.
@@ -126,7 +143,20 @@ export default async function MongoliaTravelGuide({ params }: PageProps) {
                             ))}
                         </div>
 
-                        {/* SECTION 5: FAQ (Content Gap Analysis) */}
+                        {/* SECTION 6: Packing List */}
+                        <h2 id="packing-list" className="scroll-mt-24 text-3xl font-bold text-slate-900 mb-6">Packing list for a Mongolia nomadic tour</h2>
+                        <p>
+                            Weather on the steppes changes rapidly. The golden rule for <strong>Mongolian travel</strong> is layering.
+                        </p>
+                        <ul className="list-disc pl-5 mb-8 text-slate-700">
+                            <li><strong>Warm Layers:</strong> A windproof/waterproof jacket and a fleece layer are essential, even in summer.</li>
+                            <li><strong>Sturdy Footwear:</strong> Comfortable hiking boots for exploring <strong>Mongolian trails</strong> and uneven terrain.</li>
+                            <li><strong>Sun Protection:</strong> Sunglasses, wide-brimmed hat, and high-SPF sunscreen (the high altitude means intense sun).</li>
+                            <li><strong>Essentials:</strong> Wet wipes, headlamp, portable power bank, and basic first-aid supplies.</li>
+                            <li><strong>Cultural Etiquette:</strong> Small gifts for nomadic families (e.g., small toys for children, sweets).</li>
+                        </ul>
+
+                        {/* SECTION 7: FAQ (Content Gap Analysis) */}
                         <h2 id="faq" className="scroll-mt-24 text-3xl font-bold text-slate-900 mb-6">Frequently Asked Questions</h2>
                         <div className="space-y-6 not-prose">
                             <details className="group bg-slate-50 p-4 rounded-lg cursor-pointer open:bg-white open:shadow-md transition-all">
@@ -180,7 +210,9 @@ export default async function MongoliaTravelGuide({ params }: PageProps) {
                             <a href="#best-time" className="hover:text-blue-600 hover:pl-2 transition-all">Best Time to Visit</a>
                             <a href="#visa" className="hover:text-blue-600 hover:pl-2 transition-all">Visa Requirements</a>
                             <a href="#safety" className="hover:text-blue-600 hover:pl-2 transition-all">Safety Guide</a>
+                            <a href="#gobi-vs-altai" className="hover:text-blue-600 hover:pl-2 transition-all">Gobi vs. Altai</a>
                             <a href="#cost" className="hover:text-blue-600 hover:pl-2 transition-all">Cost Breakdown</a>
+                            <a href="#packing-list" className="hover:text-blue-600 hover:pl-2 transition-all">Packing List</a>
                             <a href="#faq" className="hover:text-blue-600 hover:pl-2 transition-all">Travel FAQ</a>
                         </nav>
                         <div className="mt-8 pt-8 border-t border-slate-200">
