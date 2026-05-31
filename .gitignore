@@ -45,3 +45,14 @@ target/
 rust-service/target/
 # clerk configuration (can include secrets)
 /.clerk/
+
+# OpenNext
+.open-next
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+
+.env*
+!.env.example
