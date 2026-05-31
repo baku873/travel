@@ -6,6 +6,20 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ['react-icons', 'lucide-react', 'framer-motion', 'date-fns', 'recharts'],
   },
   // Add this 'images' configuration
+  serverExternalPackages: [
+    'mongodb',
+    'mongoose',
+    'nodemailer',
+    'leaflet',
+    'react-leaflet',
+    'leaflet-gpx',
+    '@capacitor/core',
+    '@capacitor/app',
+    '@capacitor/splash-screen',
+    '@capacitor/status-bar',
+    '@capacitor/keyboard',
+    '@capacitor/browser',
+  ],
   images: {
     remotePatterns: [
       {
