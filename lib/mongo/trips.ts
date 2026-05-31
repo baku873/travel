@@ -12,12 +12,12 @@ export interface LocalizedString {
   de: string;
 }
 export interface TripDate {
-  id: string;           // Unique ID for this specific group (e.g., "group_01")
-  startDate: string;    // ISO Date "2025-10-10"
-  endDate: string;      // ISO Date "2025-10-17"
-  maxSeats: number;     // Capacity for this specific date
-  bookedSeats: number;  // How many people booked (calculated from bookings)
-  priceModifier?: number; // Optional: extra cost for peak season
+  id: string;
+  startDate: string;
+  endDate: string;
+  maxSeats: number;
+  bookedSeats: number;
+  priceModifier?: number;
 }
 export interface ItineraryItem {
   day: number;
@@ -49,42 +49,39 @@ export interface Trip {
   _id: string;
   type?: string;
   region?: string;
-
-  // Update these to LocalizedString
   title: LocalizedString;
   location: LocalizedString;
   duration: LocalizedString;
   description?: LocalizedString;
   ageGroup?: LocalizedString;
-
   category: string;
   rating: number;
   image: string;
   price: LocalizedPrice;
-  priceAdult?: LocalizedPrice; // New: Adult Price
-  priceChild?: LocalizedPrice; // New: Child Price
-  salePrice?: LocalizedPrice;  // New: Discounted Price (overrides priceAdult)
-  discountPercentage?: number; // New: Explicit discount %
+  priceAdult?: LocalizedPrice;
+  priceChild?: LocalizedPrice;
+  salePrice?: LocalizedPrice;
+  discountPercentage?: number;
   tags?: string[];
   featured?: boolean;
   oldPrice?: number;
   reviews?: number;
   perks?: string[];
-  highlights?: LocalizedString[];       // New: Bullet points for highlights
-  includedServices?: LocalizedString[]; // New: Included items
-  excludedServices?: LocalizedString[]; // New: Excluded items
+  highlights?: LocalizedString[];
+  includedServices?: LocalizedString[];
+  excludedServices?: LocalizedString[];
   saleMonth?: number;
   seatsLeft?: number;
   itinerary?: ItineraryItem[];
-  availableDates?: { date: string; status: string; isFull?: boolean }[]; // New flexible dates
-  allowCustomDate?: boolean; // Enable/Disable "Plan your own dates"
-  season_availability?: string; // e.g., "Year around", "10 Jun - 10 Sep"
+  availableDates?: { date: string; status: string; isFull?: boolean }[];
+  allowCustomDate?: boolean;
+  season_availability?: string;
   dates: TripDate[];
-  verified?: boolean; // New: Verified by Professional Guide badge
-  coordinates?: [number, number]; // New: Lat, Lng for Map
-  elevationData?: { distance: number; elevation: number }[]; // New: Elevation Profile Data
-  gpxUrl?: string; // New: URL to GPX file
-  pointsOfInterest?: PointOfInterest[]; // New: Waypoints
+  verified?: boolean;
+  coordinates?: [number, number];
+  elevationData?: { distance: number; elevation: number }[];
+  gpxUrl?: string;
+  pointsOfInterest?: PointOfInterest[];
 }
 function mapTrip(doc: any): Trip {
   return {
@@ -102,12 +99,7 @@ export const getAllTrips = unstable_cache(
   async () => {
     const client = await clientPromise;
     const collection = client.db(DB_NAME).collection(COLLECTION);
-
-    const trips = await collection
-      .find({})
-      .sort({ featured: -1, _id: -1 })
-      .toArray();
-
+    const trips = await collection.find({}).sort({ featured: -1, _id: -1 }).toArray();
     return trips.map(mapTrip);
   },
   ['all-trips'],
@@ -115,30 +107,30 @@ export const getAllTrips = unstable_cache(
 );
 
 // 2. Get Trips by generic 'type' (family, solo, etc)
-export async function getTripsByType(type: string) {
-  const client = await clientPromise;
-  const collection = client.db(DB_NAME).collection(COLLECTION);
+export const getTripsByType = unstable_cache(
+  async (type: string) => {
+    const client = await clientPromise;
+    const collection = client.db(DB_NAME).collection(COLLECTION);
+    const trips = await collection.find({ type: type }).toArray();
+    return trips.map(mapTrip);
+  },
+  ['trips-by-type'],
+  { revalidate: 3600, tags: ['trips'] }
+);
 
-  const trips = await collection
-    .find({ type: type })
-    .toArray();
+// 3. Get Trips by REGION (Europe/Mongolia)
+export const getTripsByRegion = unstable_cache(
+  async (region: string) => {
+    const client = await clientPromise;
+    const collection = client.db(DB_NAME).collection(COLLECTION);
+    const trips = await collection.find({ region: region }).toArray();
+    return trips.map(mapTrip);
+  },
+  ['trips-by-region'],
+  { revalidate: 3600, tags: ['trips'] }
+);
 
-  return trips.map(mapTrip);
-}
-
-// 3. ✨ NEW: Get Trips by REGION (Europe/Mongolia)
-export async function getTripsByRegion(region: string) {
-  const client = await clientPromise;
-  const collection = client.db(DB_NAME).collection(COLLECTION);
-
-  const trips = await collection
-    .find({ region: region })
-    .toArray();
-
-  return trips.map(mapTrip);
-}
-
-// 4. ✨ NEW: Specific Region Helpers
+// 4. Specific Region Helpers
 export async function getEuropeTrips() {
   return getTripsByRegion("europe");
 }
@@ -152,12 +144,7 @@ export const getFeaturedTrips = unstable_cache(
   async () => {
     const client = await clientPromise;
     const collection = client.db(DB_NAME).collection(COLLECTION);
-
-    const trips = await collection
-      .find({ featured: true })
-      .limit(5)
-      .toArray();
-
+    const trips = await collection.find({ featured: true }).limit(5).toArray();
     return trips.map(mapTrip);
   },
   ['featured-trips'],
@@ -169,13 +156,7 @@ export const getRecentTrips = unstable_cache(
   async () => {
     const client = await clientPromise;
     const collection = client.db(DB_NAME).collection(COLLECTION);
-
-    const trips = await collection
-      .find({})
-      .sort({ _id: -1 })
-      .limit(6)
-      .toArray();
-
+    const trips = await collection.find({}).sort({ _id: -1 }).limit(6).toArray();
     return trips.map(mapTrip);
   },
   ['recent-trips'],
@@ -198,63 +179,55 @@ export async function getSoloTrips() {
 }
 
 // 10. Get Sale trips
-export async function getSaleTrips() {
-  const client = await clientPromise;
-  const collection = client.db(DB_NAME).collection(COLLECTION);
-
-  const trips = await collection
-    .find({
-      oldPrice: { $exists: true, $ne: null }
-    })
-    .sort({ price: 1 })
-    .toArray();
-
-  return trips.map(mapTrip);
-}
+export const getSaleTrips = unstable_cache(
+  async () => {
+    const client = await clientPromise;
+    const collection = client.db(DB_NAME).collection(COLLECTION);
+    const trips = await collection
+      .find({ oldPrice: { $exists: true, $ne: null } })
+      .sort({ price: 1 })
+      .toArray();
+    return trips.map(mapTrip);
+  },
+  ['sale-trips'],
+  { revalidate: 3600, tags: ['trips'] }
+);
 
 // 11. Get Single Trip by ID
-export async function getTripById(id: string) {
-  const client = await clientPromise;
-  const collection = client.db(DB_NAME).collection(COLLECTION);
+const _cachedGetTripById = unstable_cache(
+  async (id: string) => {
+    const client = await clientPromise;
+    const collection = client.db(DB_NAME).collection(COLLECTION);
+    try {
+      const trip = await collection.findOne({ _id: new ObjectId(id) });
+      return trip ? mapTrip(trip) : null;
+    } catch {
+      return null;
+    }
+  },
+  ['trip-by-id'],
+  { revalidate: 3600, tags: ['trips'] }
+);
 
-  try {
-    const trip = await collection.findOne({ _id: new ObjectId(id) });
-    return trip ? mapTrip(trip) : null;
-  } catch (error) {
-    return null;
-  }
-}
+export const getTripById = (id: string) => _cachedGetTripById(id);
 
 // 12. Get Recommendations based on interests/budget
 export async function getRecommendations(preferences: any) {
   const client = await clientPromise;
   const collection = client.db(DB_NAME).collection(COLLECTION);
-
   const query: any = {};
-
-  // Basic matching logic:
-  // If interests are provided, match against tags or category
   if (preferences.interests && preferences.interests.length > 0) {
     query.$or = [
       { tags: { $in: preferences.interests } },
       { category: { $in: preferences.interests } }
     ];
   }
-
-  // Budget filtering (optional, loose matching)
-  // If budget provided, filter trips that are roughly within range (e.g., +20%)
   if (preferences.budget) {
     const budgetNum = parseInt(preferences.budget);
     if (!isNaN(budgetNum)) {
-      // Assuming 'price.en' is a good proxy for base price
       query["price.en"] = { $lte: budgetNum * 1.2 };
     }
   }
-
-  const trips = await collection
-    .find(query)
-    .limit(3) // Top 3 recommendations
-    .toArray();
-
+  const trips = await collection.find(query).limit(3).toArray();
   return trips.map(mapTrip);
 }

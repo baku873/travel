@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
-import { motion, useScroll, useTransform, useMotionValue, useSpring, AnimatePresence } from "framer-motion";
+import { useRef, useEffect, useState, useCallback } from "react";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { useClerk, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import {
@@ -152,18 +152,28 @@ const FeaturedTrips = ({ trips, lang, dictionary }: { trips: Trip[], lang: strin
 
 /* ────────────────────── 3D Tilt Card Component ────────────────────── */
 const TripCard = ({ trip, index, language, wished, onToggle }: { trip: Trip, index: number, language: "mn" | "en" | "ko", wished: boolean, onToggle: () => void }) => {
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const rotateX = useSpring(useTransform(y, [-100, 100], [5, -5]), { stiffness: 150, damping: 20 });
-  const rotateY = useSpring(useTransform(x, [-100, 100], [-5, 5]), { stiffness: 150, damping: 20 });
+  const cardRef = useRef<HTMLDivElement>(null);
 
-  function handleMouse(event: React.MouseEvent<HTMLDivElement>) {
-    const rect = event.currentTarget.getBoundingClientRect();
+  const handleMouse = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
+    const el = cardRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
-    x.set(event.clientX - centerX);
-    y.set(event.clientY - centerY);
-  }
+    const dx = event.clientX - centerX;
+    const dy = event.clientY - centerY;
+    const rotateXVal = (dy / (rect.height / 2)) * -5;
+    const rotateYVal = (dx / (rect.width / 2)) * 5;
+    el.style.setProperty('--rx', `${rotateXVal}deg`);
+    el.style.setProperty('--ry', `${rotateYVal}deg`);
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    const el = cardRef.current;
+    if (!el) return;
+    el.style.setProperty('--rx', '0deg');
+    el.style.setProperty('--ry', '0deg');
+  }, []);
 
   // ────────────────── PRICE CALCULATION FIX ──────────────────
   // Helper to safely get price number
@@ -193,13 +203,19 @@ const TripCard = ({ trip, index, language, wished, onToggle }: { trip: Trip, ind
   const imageSrc = trip.image && trip.image.trim() !== "" ? trip.image : "/try.png";
 
   return (
-    <motion.div
-      initial={{ opacity: 0, x: 50 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ delay: index * 0.1, duration: 0.5, ease: "easeOut" }}
+    <div
+      ref={cardRef}
+      onMouseMove={handleMouse}
+      onMouseLeave={handleMouseLeave}
       className="min-w-[280px] w-[280px] md:min-w-[340px] snap-center relative group"
+      style={{ transform: 'perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg))', transition: 'transform 0.1s ease' }}
     >
+      <motion.div
+        initial={{ opacity: 0, x: 50 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ delay: index * 0.1, duration: 0.5, ease: "easeOut" }}
+      >
       <div className="bg-white rounded-[32px] p-0 shadow-sm hover:shadow-2xl hover:scale-105 transition-all duration-300 h-full flex flex-col relative z-10 overflow-hidden border border-slate-100">
 
         {/* 1. Image Container */}
@@ -266,7 +282,8 @@ const TripCard = ({ trip, index, language, wished, onToggle }: { trip: Trip, ind
           </div>
         </div>
       </div>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 };
 

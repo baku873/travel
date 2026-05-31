@@ -153,17 +153,32 @@ const Hero = ({ trips, lang, dictionary }: { trips: Trip[], lang: "mn" | "en" | 
   const x = useTransform(springX, [0, 1], ["2%", "-2%"]);
   const y = useTransform(springY, [0, 1], ["2%", "-2%"]);
 
+  // Ref for the hero section element (used by IntersectionObserver)
+  const heroRef = useRef<HTMLElement>(null);
+  const isVisibleRef = useRef(true);
+
   useEffect(() => {
     // Skip parallax on mobile — no mouse events on touch devices
-    if (isMobile) return;
+    if (isMobile) {
+      mouseX.set(0.5);
+      mouseY.set(0.5);
+      return;
+    }
+
+    let rafId: number;
     const handleMouseMove = (e: MouseEvent) => {
-      // Normalize to 0-1
-      mouseX.set(e.clientX / window.innerWidth);
-      mouseY.set(e.clientY / window.innerHeight);
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        mouseX.set(e.clientX / window.innerWidth);
+        mouseY.set(e.clientY / window.innerHeight);
+      });
     };
 
     window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
+    return () => {
+      cancelAnimationFrame(rafId);
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
   }, [mouseX, mouseY, isMobile]);
 
   const t = useCallback((obj: any) => {
@@ -180,10 +195,46 @@ const Hero = ({ trips, lang, dictionary }: { trips: Trip[], lang: "mn" | "en" | 
   }, [activeLang]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setSlideIndex((prev) => (prev + 1) % slides.length);
-    }, AUTOPLAY_DURATION);
-    return () => clearInterval(interval);
+    let interval: ReturnType<typeof setInterval> | null = null;
+
+    const startAutoplay = () => {
+      if (interval) return;
+      interval = setInterval(() => {
+        setSlideIndex((prev) => (prev + 1) % slides.length);
+      }, AUTOPLAY_DURATION);
+    };
+
+    const stopAutoplay = () => {
+      if (interval) {
+        clearInterval(interval);
+        interval = null;
+      }
+    };
+
+    // Use IntersectionObserver to pause autoplay when hero is not visible
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisibleRef.current = entry.isIntersecting;
+        if (entry.isIntersecting) {
+          startAutoplay();
+        } else {
+          stopAutoplay();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (heroRef.current) {
+      observer.observe(heroRef.current);
+    } else {
+      // Fallback: start autoplay immediately if ref not yet attached
+      startAutoplay();
+    }
+
+    return () => {
+      stopAutoplay();
+      observer.disconnect();
+    };
   }, [slides.length]);
 
   useEffect(() => {
@@ -195,7 +246,7 @@ const Hero = ({ trips, lang, dictionary }: { trips: Trip[], lang: "mn" | "en" | 
   if (!activeSlide) return null;
 
   return (
-    <section className="relative h-screen min-h-[700px] w-full bg-slate-900 text-white flex items-center justify-center overflow-hidden">
+    <section ref={heroRef} className="relative h-screen min-h-[700px] w-full bg-slate-900 text-white flex items-center justify-center overflow-hidden">
       {/* ─── 1. Background Video with Fallback Image ─── */}
       <motion.div
         className="absolute inset-0 z-0"

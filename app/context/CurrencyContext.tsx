@@ -17,6 +17,9 @@ interface CurrencyContextType {
 
 const CurrencyContext = createContext<CurrencyContextType | undefined>(undefined);
 
+const CACHE_KEY = 'currency_rates';
+const CACHE_TTL = 60 * 60 * 1000; // 1 hour
+
 export const CurrencyProvider = ({ children }: { children: React.ReactNode }) => {
   const [rates, setRates] = useState<ExchangeRate[]>([]);
   const [loading, setLoading] = useState(true);
@@ -24,9 +27,27 @@ export const CurrencyProvider = ({ children }: { children: React.ReactNode }) =>
   useEffect(() => {
     const fetchRates = async () => {
       try {
+        // Check sessionStorage cache first
+        if (typeof window !== 'undefined') {
+          const cached = sessionStorage.getItem(CACHE_KEY);
+          if (cached) {
+            const { data, timestamp } = JSON.parse(cached);
+            if (Date.now() - timestamp < CACHE_TTL) {
+              setRates(data);
+              setLoading(false);
+              return;
+            }
+          }
+        }
+
         const response = await fetch("https://monxansh.appspot.com/xansh.json");
         const data = await response.json();
         setRates(data);
+
+        // Cache the result in sessionStorage
+        if (typeof window !== 'undefined') {
+          sessionStorage.setItem(CACHE_KEY, JSON.stringify({ data, timestamp: Date.now() }));
+        }
       } catch (error) {
         console.error("Failed to fetch rates:", error);
       } finally {

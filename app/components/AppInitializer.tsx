@@ -13,16 +13,6 @@ export function AppInitializer() {
     const router = useRouter();
 
     useEffect(() => {
-        // Unregister any existing service workers to prevent caching issues with video/media
-        if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations().then(registrations => {
-                for (const registration of registrations) {
-                    console.log('Unregistering Service Worker:', registration);
-                    registration.unregister();
-                }
-            });
-        }
-
         // Only run in native environment
         if (!Capacitor.isNativePlatform()) return;
 

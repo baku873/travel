@@ -33,7 +33,7 @@ const montserrat = Montserrat({
 
 const notoSansKr = Noto_Sans_KR({
   subsets: ['latin'],
-  weight: ['100', '300', '400', '500', '700', '900'],
+  weight: ['400', '700'],
   variable: '--font-noto-sans-kr',
   display: 'swap',
 });
