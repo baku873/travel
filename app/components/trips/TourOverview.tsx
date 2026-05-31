@@ -74,9 +74,13 @@ const TourOverview: React.FC<TourOverviewProps> = ({ trip }) => {
                             <button className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-white border border-[#E8E2D9] text-[#2C362B] rounded-full font-bold hover:bg-slate-50 transition-all text-sm uppercase tracking-widest">
                                 <Printer size={18} /> Print
                             </button>
-                            <button className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-white border border-[#E8E2D9] text-[#2C362B] rounded-full font-bold hover:bg-slate-50 transition-all text-sm uppercase tracking-widest">
+                            <a
+                                href="/gobi-desert-packing-list.pdf"
+                                download
+                                className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-white border border-[#E8E2D9] text-[#2C362B] rounded-full font-bold hover:bg-slate-50 transition-all text-sm uppercase tracking-widest"
+                            >
                                 <FileDown size={18} /> Download PDF
-                            </button>
+                            </a>
                         </div>
                         <button className="w-full py-5 bg-[#800000] text-white rounded-[24px] font-serif text-xl hover:bg-[#660000] transition-all shadow-xl hover:shadow-2xl hover:-translate-y-1 transform duration-300 flex items-center justify-center gap-3">
                             INQUIRE THIS TRIP

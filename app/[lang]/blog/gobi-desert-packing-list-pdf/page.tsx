@@ -70,9 +70,13 @@ export default function PackingListPage() {
                         >
                             <FaPrint /> Print Checklist
                         </button>
-                        <button className="flex items-center gap-2 bg-sky-500 hover:bg-sky-400 transition-colors px-6 py-3 rounded-full font-bold shadow-lg shadow-sky-500/30">
+                        <a
+                            href="/gobi-desert-packing-list.pdf"
+                            download
+                            className="flex items-center gap-2 bg-sky-500 hover:bg-sky-400 transition-colors px-6 py-3 rounded-full font-bold shadow-lg shadow-sky-500/30 text-white decoration-none"
+                        >
                             <FaDownload /> Download PDF
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
